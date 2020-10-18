@@ -15,7 +15,7 @@
       </v-scroll-x-transition>
     </v-overlay>
     <AuthenticationPanel
-      authenticationTypeText="Sign up to Medio"
+      authenticationTypeText="Sign up"
       route-name="login"
       link-name="Sign in"
     >
@@ -57,9 +57,16 @@
         </div>
         <div>
           <v-text-field
-            label="Company Name"
-            v-model="company"
-            prepend-inner-icon="mdi-business-outline"
+            label="Company ID"
+            v-model="company_id"
+            prepend-inner-icon="mdi-bank-outline"
+          />
+        </div>
+                <div>
+          <v-text-field
+            label="User Role"
+            v-model="user_role_id"
+            prepend-inner-icon="mdi-badge-account-horizontal-outline"
           />
         </div>
         <div>
@@ -100,14 +107,15 @@ export default {
   data: () => ({
     name: "",
     surname: "",
-    company: "",
+    company_id: 1,
+    user_role_id: 1,
     email: "",
     password: "",
     registerSuccess: false,
     showPanel: false,
     // showPassword: false,
     // showRepeatPassword: false,
-    errors: [],
+    errors: null,
   }),
   methods: {
     async register() {
@@ -116,6 +124,8 @@ export default {
           name: this.name,
           surname: this.surname,
           username: this.name + this.surname,
+          company_id: parseInt(this.company_id),
+          user_role_id: parseInt(this.user_role_id),
           email: this.email,
           password: this.password,
         });
@@ -137,11 +147,11 @@ export default {
           }, 2500);
         } else if (response.data.errors) {
           this.errors = response.data.errors;
-          setTimeout(() => (this.errors = []), 5000);
+          setTimeout(() => (this.errors = null), 5000);
         }
       } catch (error) {
         this.errors = error.response.data;
-        setTimeout(() => (this.errors = []), 5000);
+        setTimeout(() => (this.errors = null), 5000);
       }
     },
   },
