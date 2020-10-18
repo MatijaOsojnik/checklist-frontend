@@ -52,6 +52,7 @@
 
 <script>
 import AuthenticationPanel from "@/components/Authentication-Panel/Authentication-Panel";
+import AuthenticationService from "@/services/AuthenticationService";
 export default {
   components: {
     AuthenticationPanel,
@@ -68,32 +69,32 @@ export default {
     
 },
   methods: {
-    // async login() {
-    //   try {
-    //     const response = await AuthenticationService.login({
-    //       email: this.email,
-    //       password: this.password,
-    //     });
+    async login() {
+      try {
+        const response = await AuthenticationService.login({
+          email: this.email,
+          password: this.password,
+        });
 
-    //     this.showPanel = true;
+        this.showPanel = true;
 
-    //     setTimeout(() => {
-    //       this.loginSuccess = true;
-    //     }, 1500);
+        setTimeout(() => {
+          this.loginSuccess = true;
+        }, 1500);
 
-    //     setTimeout(() => {
-    //       this.$store.dispatch("setToken", response.data.token);
-    //       this.$store.dispatch("setUser", response.data.user);
-    //       this.$store.dispatch("setAuthorities", response.data.authorities);
-    //       this.loginSuccess = false;
-    //       this.showPanel = false;
-    //       this.$router.push({ name: "stories" });
-    //     }, 2500);
-    //   } catch (error) {
-    //     this.error = error.response.data.error;
-    //     setTimeout(() => (this.error = null), 5000);
-    //   }
-    // },
+        setTimeout(() => {
+          this.$store.dispatch("setToken", response.data.token);
+          this.$store.dispatch("setUser", response.data.user);
+          this.$store.dispatch("setAuthorities", response.data.authorities);
+          this.loginSuccess = false;
+          this.showPanel = false;
+          this.$router.push({ name: "stories" });
+        }, 2500);
+      } catch (error) {
+        this.error = error.response.data.error;
+        setTimeout(() => (this.error = null), 5000);
+      }
+    },
   },
 };
 </script>

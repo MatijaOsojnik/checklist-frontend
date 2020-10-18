@@ -1,0 +1,16 @@
+import axios from '@/services/axios'
+
+export default {
+    register(credentials) {
+        return axios.post('register', credentials)
+    },
+    login(credentials) {
+        return axios.post('users/sign_in', credentials)
+    },
+    googleAuth(user) {
+        return axios.post('auth/google', user)
+    },
+    facebookAuth(token) {
+        return axios.post('auth/facebook', {token})
+    }
+}
