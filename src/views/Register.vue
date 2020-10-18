@@ -32,6 +32,11 @@
                 Password {{ error }}
               </li>
             </div>
+                        <div v-if="errors.company_id">
+              <li v-for="error in errors.company_id" :key="error">
+                Company {{ error }}
+              </li>
+            </div>
           </ul>
         </v-alert>
       </v-scroll-x-transition>
