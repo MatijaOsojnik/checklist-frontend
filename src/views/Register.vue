@@ -123,7 +123,7 @@ export default {
         const response = await AuthenticationService.register({
           name: this.name,
           surname: this.surname,
-          username: this.name + this.surname,
+          username: (this.name + this.surname).toLowerCase(),
           company_id: parseInt(this.company_id),
           user_role_id: parseInt(this.user_role_id),
           email: this.email,
@@ -143,7 +143,7 @@ export default {
             // this.$store.dispatch("setAuthorities", response.data.authorities);
             this.registerSuccess = false;
             this.showPanel = false;
-            this.$router.push({ name: "/" });
+            this.$router.push({ name: "login" });
           }, 2500);
         } else if (response.data.errors) {
           this.errors = response.data.errors;
