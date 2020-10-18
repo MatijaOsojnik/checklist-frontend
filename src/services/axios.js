@@ -3,7 +3,7 @@ let baseurl = ''
 if(process.env.NODE_ENV === 'production'){
     baseurl = 'https://medioapp.herokuapp.com/api'
 }else {
-    baseurl = 'http://localhost:3000/'
+    baseurl = 'http://localhost:3000/api/v1/'
 }
 
 const axiosInstance = axios.create({
