@@ -75,6 +75,7 @@ export default {
           email: this.email,
           password: this.password,
         });
+        console.log(response)
 
         this.showPanel = true;
 
@@ -83,14 +84,15 @@ export default {
         }, 1500);
 
         setTimeout(() => {
-          this.$store.dispatch("setToken", response.data.token);
+          console.log(response)
           this.$store.dispatch("setUser", response.data.user);
-          this.$store.dispatch("setAuthorities", response.data.authorities);
+
           this.loginSuccess = false;
           this.showPanel = false;
-          this.$router.push({ name: "stories" });
+          this.$router.push({ name: "about" });
         }, 2500);
       } catch (error) {
+        console.log(error)
         this.error = error.response.data.error;
         setTimeout(() => (this.error = null), 5000);
       }

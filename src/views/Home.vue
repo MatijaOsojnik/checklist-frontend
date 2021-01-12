@@ -1,7 +1,8 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    HI!
+    <p>
+      HI {{user}}!
+    </p>
   </div>
 </template>
 
@@ -10,7 +11,10 @@
 
 export default {
   name: 'Home',
-  components: {
-  }
+  components: {},
+  data: () => ({
+    user: 'HEY',
+  }),
+
 }
 </script>
