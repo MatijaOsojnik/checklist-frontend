@@ -4,11 +4,13 @@
       flat
       color="white"
     >
-          <v-toolbar-title v-if="$router.history.current['path'] === '/'">
+          <!-- <v-toolbar-title v-if="$router.history.current['path'] === '/'">
       <router-link :to="{name: 'home'}" class="brand">Checklist</router-link>
-    </v-toolbar-title>
-    <v-toolbar-title v-else>
-      <router-link :to="{name: 'home'}" class="brand-black">Checklist</router-link>
+    </v-toolbar-title> -->
+    <v-toolbar-title>
+      <router-link :to="{name: 'home'}" class="brand-black">
+        <v-img max-width="150px" src="../../assets/checky-logo.svg"></v-img>
+      </router-link>
     </v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -198,8 +200,6 @@ export default {
   opacity: 0.9;
   font-weight: 400 !important;
   font-size: 33px !important;
-  border-top: 1px solid;
-  border-bottom: 1px solid;
 }
 .mobile-logo {
   font-family: "Julius Sans One", sans-serif;
