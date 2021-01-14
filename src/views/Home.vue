@@ -27,9 +27,10 @@ export default {
     user: null,
   }),
   mounted() {
-    const token  = this.$store.state.token
-    this.user = jwtDecode(token);
-    console.log(this.user)
+    if(this.$store.state.token) {
+      const token  = this.$store.state.token
+      this.user = jwtDecode(token);
+    }
   }
 
 }

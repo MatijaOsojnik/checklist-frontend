@@ -4,21 +4,16 @@
       flat
       color="white"
     >
-      <v-toolbar-title class="d-xl-block d-lg-block d-md-block d-none">
-        <router-link :to="{ name: 'stories' }" class="brand-black pa-4"
-          >Medio</router-link
-        >
-      </v-toolbar-title>
-      <v-toolbar-title class="d-xl-none d-lg-none d-md-none d-block">
-        <router-link :to="{ name: 'stories' }" class="mobile-logo ma-3">
-          M
-          <!-- <v-img src="@/assets/logo.png" style="border-radius: 7px;" max-width="50px"></v-img> -->
-        </router-link>
-      </v-toolbar-title>
+          <v-toolbar-title v-if="$router.history.current['path'] === '/'">
+      <router-link :to="{name: 'home'}" class="brand">Checklist</router-link>
+    </v-toolbar-title>
+    <v-toolbar-title v-else>
+      <router-link :to="{name: 'home'}" class="brand-black">Checklist</router-link>
+    </v-toolbar-title>
 
       <v-spacer></v-spacer>
 
-      <v-menu
+      <!-- <v-menu
         offset-y
         v-if="
           currentRouteName !== 'story-create' &&
@@ -103,44 +98,7 @@
             </div>
           </v-list>
         </v-card>
-      </v-menu>
-
-      <v-btn
-        v-if="currentRouteName === 'story-create'"
-        :disabled="$store.state.currentStory.JSON.content.length <= 2"
-        small
-        white
-        outlined
-        class="inline-block"
-        :to="{ path: `/stories/publish/${$store.state.user.id}` }"
-      >
-        PUBLISH
-      </v-btn>
-
-      <v-btn
-        v-if="currentRouteName === 'story-edit'"
-        small
-        white
-        outlined
-        class="inline-block"
-        :to="{ path: `/stories/${$route.params.id}/edit/publish` }"
-      >
-        PUBLISH
-      </v-btn>
-
-      <v-btn color="#1b262c" icon style="margin-right: 0.3em" class="ma-4">
-        <router-link
-          :to="{
-            path: `/users/${$store.state.user.display_name
-              .toLowerCase()
-              .replace(/\s/g, '')}/${$store.state.user.id}/bookmarks`,
-          }"
-        >
-          <v-avatar size="40px">
-            <v-icon>mdi-bookmark-multiple-outline</v-icon>
-          </v-avatar>
-        </router-link>
-      </v-btn>
+      </v-menu> -->
 
       <v-menu
         bottom
@@ -151,11 +109,9 @@
       >
         <template v-slot:activator="{ on }">
           <v-btn color="#1b262c" v-on="on" icon style="margin-right: 0.3em">
-            <v-avatar v-if="!$store.state.user.icon_url" size="40px">
-              <v-icon>mdi-account-circle-outline</v-icon>
-            </v-avatar>
-            <v-avatar v-else size="40px">
-              <v-img :src="$store.state.user.icon_url" />
+            <v-avatar size="40px">
+              <!-- <v-img :src="$store.state.user.icon_url" /> -->
+              <v-icon size="35px">mdi-account-circle-outline</v-icon>
             </v-avatar>
           </v-btn>
         </template>
@@ -163,7 +119,7 @@
         <v-card max-width="200px">
           <v-container fluid>
             <div class="d-flex justify-center align-center flex-column ma-3">
-              <router-link
+              <!-- <router-link
                 :to="{
                   path: `/users/${$store.state.user.display_name
                     .toLowerCase()
@@ -187,77 +143,12 @@
                 }"
               >
                 <span>{{ $store.state.user.display_name }}</span>
-              </router-link>
-              <v-btn
-                depressed
-                small
-                block
-                text
-                :to="{
-                  path: `/users/${$store.state.user.display_name
-                    .toLowerCase()
-                    .replace(/\s/g, '')}/${$store.state.user.id}/profile`,
-                }"
-                >View profile</v-btn
-              >
-            </div>
-            <v-divider />
-            <v-btn
-              v-if="adminPermissions"
-              class="my-3"
-              depressed
-              small
-              text
-              block
-              :to="{ name: 'admin-main' }"
-              >Admin Panel</v-btn
-            >
-            <v-divider v-if="adminPermissions" />
-            <div class="d-flex justify-center align-center flex-column ma-3">
-              <v-btn
-                class="ma-1"
-                depressed
-                small
-                text
-                block
-                :to="{ path: `/stories/create/${$store.state.user.id}` }"
-                >New Story</v-btn
-              >
-              <v-btn
-                class="ma-1"
-                depressed
-                small
-                text
-                block
-                :to="{
-                  path: `/users/${$store.state.user.display_name
-                    .toLowerCase()
-                    .replace(/\s/g, '')}/${$store.state.user.id}/stories`,
-                }"
-                >My stories</v-btn
-              >
-              <v-btn
-                class="ma-1"
-                depressed
-                small
-                text
-                block
-                :to="{
-                  path: `/users/${$store.state.user.display_name
-                    .toLowerCase()
-                    .replace(/\s/g, '')}/${$store.state.user.id}/edit`,
-                }"
-                >Edit account</v-btn
-              >
+              </router-link> -->
 
-              <v-btn class="ma-1" depressed small text block @click="logout"
-                >Log out</v-btn
-              >
+              <v-btn class="" depressed small text block @click="logout">
+                Log out
+              </v-btn>
             </div>
-            <!-- <v-list-item @click="toPath">My stories</v-list-item>
-                <v-list-item @click="toPath">Settings</v-list-item>
-                <v-list-item @click="logout">Log out</v-list-item>
-            </v-list>-->
           </v-container>
         </v-card>
       </v-menu>
@@ -266,125 +157,35 @@
 </template>
 
 <script>
-import CategoryService from "@/services/CategoryService";
-import GeneralService from "@/services/GeneralService";
-// import { debounce } from "lodash"
 export default {
   components: {},
   data: () => ({
-    categories: null,
-    permissions: false,
-    adminPermissions: false,
     isChecking: true,
-    isContent: false,
     keyword: "",
-    profiles: [],
-    stories: [],
     showMenu: false,
     x: 0,
     y: 0,
   }),
-
-  watch: {
-    $route: "checkRoles",
-    keyword(oldKeyword) {
-      this.contentSearch();
-      if (oldKeyword !== "") {
-        this.showMenu = true;
-      } else {
-        this.showMenu = false;
-      }
-    },
-  },
-
-  created() {
-    this.checkRoles();
-    this.getCategories();
-    // this.debounceName = debounce(this.contentSearch, 1000)
-  },
-  computed: {
-    currentRouteName() {
-      return this.$route.name;
-    },
-    // isContent: () => {
-    //   return this.$store.state.currentStory.HTML
-    //   // if ($store.state.currentStory.JSON.length < 10) {
-    //   //   return false;
-    //   // } else {
-    //   //   return true;
-    //   // }
-    // },
-  },
   methods: {
-    async contentSearch() {
-      if (this.keyword !== "") {
-        const response = await GeneralService.search(
-          this.keyword.toLowerCase()
-        );
-        if (response.data.stories.length > 0) {
-          this.stories = response.data.stories;
-        }
-        if (response.data.users.length > 0) {
-          this.profiles = response.data.users;
-        }
-      }
-    },
+    // async contentSearch() {
+    //   if (this.keyword !== "") {
+    //     const response = await GeneralService.search(
+    //       this.keyword.toLowerCase()
+    //     );
+    //     if (response.data.stories.length > 0) {
+    //       this.stories = response.data.stories;
+    //     }
+    //     if (response.data.users.length > 0) {
+    //       this.profiles = response.data.users;
+    //     }
+    //   }
+    // },
     logout() {
       this.$store.dispatch("setToken", null);
       this.$store.dispatch("setUser", null);
-      this.$store.dispatch("setAuthorities", null);
-      this.$store.dispatch("setCurrentStoryHTML", ``);
-      this.$store.dispatch("setCurrentStoryJSON", null);
-      this.permissions = false;
-      this.adminPermissions = false;
       this.$router.push({
         name: "login",
       });
-      if (window.gapi) {
-        const auth2 = window.gapi.auth2.getAuthInstance();
-        if (auth2) {
-          auth2.signOut().then(function () {
-            console.log("User signed out.");
-          });
-        }
-      }
-      if (window.FB) {
-        if (window.ujwts) window.FB.logout();
-      }
-    },
-    // async publish(data) {
-
-    // },
-    async getCategories() {
-      try {
-        const response = await CategoryService.index();
-        this.categories = response.data;
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    checkRoles() {
-      const userAuthorities = this.$store.state.authorities;
-      if (userAuthorities) {
-        for (let i = 0; i < userAuthorities.length; i++) {
-          if (
-            userAuthorities[i] === "ROLE_storyR" ||
-            userAuthorities[i] === "ROLE_MODERATOR" ||
-            userAuthorities[i] === "ROLE_ADMIN"
-          ) {
-            this.permissions = true;
-          } else {
-            this.permissions = false;
-          }
-        }
-        for (let i = 0; i < userAuthorities.length; i++) {
-          if (userAuthorities[i] === "ROLE_ADMIN") {
-            this.adminPermissions = true;
-          } else {
-            this.adminPermissions = false;
-          }
-        }
-      }
     },
   },
 };

@@ -19,9 +19,7 @@
     >
       <v-scroll-x-transition>
         <v-alert type="warning" elevation="2" v-if="error">
-          <ul>
-            <li :error="error">{{ error }}</li>
-          </ul>
+            {{ error }}
         </v-alert>
       </v-scroll-x-transition>
       <form @submit.prevent="handleSubmit">
@@ -76,30 +74,29 @@ export default {
           password: this.password,
         });
 
-        // const response = await axios.post('http://localhost:5000/api/user/login', {
-        //   email: this.email,
-        //   password: this.password,
-        // });
+        if(response.data.token) {
+          this.showPanel = true;
+  
+          setTimeout(() => {
+            this.loginSuccess = true;
+          }, 1500);
+  
+            const decoded = jwtDecode(response.data.token)
+  
+          setTimeout(() => {
+            this.$store.dispatch("setToken", response.data.token);
+            this.$store.dispatch("setUser", decoded)
+  
+            this.loginSuccess = false;
+            this.showPanel = false;
+            this.$router.push({ name: "home" });
+          }, 2500);
+        } else {
+          console.log("no response")
+        }
 
-        this.showPanel = true;
-
-        setTimeout(() => {
-          this.loginSuccess = true;
-        }, 1500);
-
-          const decoded = jwtDecode(response.data.token)
-
-        setTimeout(() => {
-          this.$store.dispatch("setToken", response.data.token);
-          this.$store.dispatch("setUser", decoded)
-
-          this.loginSuccess = false;
-          this.showPanel = false;
-          this.$router.push({ name: "home" });
-        }, 2500);
       } catch (error) {
-        console.log(error);
-        this.error = error.response.data.error;
+        this.error = error.response.data.message;
         setTimeout(() => (this.error = null), 5000);
       }
     },

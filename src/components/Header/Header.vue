@@ -1,7 +1,10 @@
 <template>
+<div v-if="!$store.state.isUserLoggedIn">
   <v-app-bar
     flat
+    color="white"
   >
+  
     <v-toolbar-title v-if="$router.history.current['path'] === '/'">
       <router-link :to="{name: 'home'}" class="brand">Checklist</router-link>
     </v-toolbar-title>
@@ -62,6 +65,7 @@
       </v-btn>
     
   </v-app-bar>
+</div>
 </template>
 
 <script>

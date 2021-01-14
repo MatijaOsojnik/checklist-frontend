@@ -22,21 +22,7 @@
       <v-scroll-x-transition>
         <v-alert elevation="2" type="warning" v-if="errors">
           <ul>
-            <div v-if="errors.email">
-              <li v-for="error in errors.email" :key="error">
-                Email {{ error }}
-              </li>
-            </div>
-            <div v-if="errors.password">
-              <li v-for="error in errors.password" :key="error">
-                Password {{ error }}
-              </li>
-            </div>
-                        <div v-if="errors.company_id">
-              <li v-for="error in errors.company_id" :key="error">
-                Company {{ error }}
-              </li>
-            </div>
+            <li v-for="error in errors" :key="error">{{error.msg}}</li>
           </ul>
         </v-alert>
       </v-scroll-x-transition>
@@ -129,7 +115,6 @@ export default {
           email: this.email,
           password: this.password,
         });
-        console.log(response);
         if (response.data.token) {
           this.showPanel = true;
 
@@ -145,13 +130,11 @@ export default {
             this.showPanel = false;
             this.$router.push({ name: "login" });
           }, 2500);
-        } else if (response.data.errors) {
-          this.errors = response.data.errors;
-          setTimeout(() => (this.errors = null), 5000);
         }
       } catch (error) {
-        this.errors = error.response.data;
-        setTimeout(() => (this.errors = null), 5000);
+        console.log(error.response.data.errors)
+        this.errors = error.response.data.errors;
+        setTimeout(() => (this.errors = null), 10000);
       }
     },
   },
