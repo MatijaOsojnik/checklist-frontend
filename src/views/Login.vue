@@ -52,7 +52,8 @@
 
 <script>
 import AuthenticationPanel from "@/components/Authentication-Panel/Authentication-Panel";
-import AuthenticationService from "@/services/AuthenticationService";
+// import AuthenticationService from "@/services/AuthenticationService";
+import axios from "axios";
 export default {
   components: {
     AuthenticationPanel,
@@ -65,17 +66,20 @@ export default {
     showPassword: false,
     error: null,
   }),
-  mounted() {
-    
-},
+  mounted() {},
   methods: {
     async login() {
       try {
-        const response = await AuthenticationService.login({
+        // const response = await AuthenticationService.login({
+        //   email: this.email,
+        //   password: this.password,
+        // });
+
+        const response = await axios.post('http://localhost:5000/api/user/login', {
           email: this.email,
           password: this.password,
         });
-        console.log(response)
+        console.log(response);
 
         this.showPanel = true;
 
@@ -84,15 +88,15 @@ export default {
         }, 1500);
 
         setTimeout(() => {
-          console.log(response)
-          this.$store.dispatch("setUser", response.data.user);
+          console.log(response);
+          this.$store.dispatch("setToken", response.data.token);
 
           this.loginSuccess = false;
           this.showPanel = false;
           this.$router.push({ name: "about" });
         }, 2500);
       } catch (error) {
-        console.log(error)
+        console.log(error);
         this.error = error.response.data.error;
         setTimeout(() => (this.error = null), 5000);
       }

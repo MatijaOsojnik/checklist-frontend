@@ -55,7 +55,7 @@
             prepend-inner-icon="mdi-account-outline"
           />
         </div>
-        <div>
+        <!-- <div>
           <v-text-field
             label="Company ID"
             v-model="company_id"
@@ -68,7 +68,7 @@
             v-model="user_role_id"
             prepend-inner-icon="mdi-badge-account-horizontal-outline"
           />
-        </div>
+        </div> -->
         <div>
           <v-text-field
             label="E-mail"
@@ -124,13 +124,13 @@ export default {
           name: this.name,
           surname: this.surname,
           username: (this.name + this.surname).toLowerCase(),
-          company_id: parseInt(this.company_id),
-          user_role_id: parseInt(this.user_role_id),
+          // company_id: parseInt(this.company_id),
+          // user_role_id: parseInt(this.user_role_id),
           email: this.email,
           password: this.password,
         });
         console.log(response);
-        if (response.data.user) {
+        if (response.data.token) {
           this.showPanel = true;
 
           setTimeout(() => {
@@ -138,7 +138,7 @@ export default {
           }, 1500);
 
           setTimeout(() => {
-            // this.$store.dispatch("setToken", response.data.token);
+            this.$store.dispatch("setToken", response.data.token);
             // this.$store.dispatch("setUser", response.data.user);
             // this.$store.dispatch("setAuthorities", response.data.authorities);
             this.registerSuccess = false;
