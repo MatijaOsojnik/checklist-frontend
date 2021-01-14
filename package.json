@@ -6,12 +6,13 @@
     "serve": "vue-cli-service serve --port 8080",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "start": "npm run start --prefix server",
+    "start": "npm run serve",
     "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "jwt-decode": "^3.1.2",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuetify": "^2.2.11",

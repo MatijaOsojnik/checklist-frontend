@@ -4,8 +4,8 @@ export default {
     index() {
         return axios.get('users')
     },
-    show(userId) {
-        return axios.get(`users/${userId}`)
+    show() {
+        return axios.get(`user/me`)
     },
     allUserInfo() {
         return axios.get(`users/admin`)
