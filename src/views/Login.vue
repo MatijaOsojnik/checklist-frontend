@@ -90,13 +90,12 @@ export default {
           const decoded = jwtDecode(response.data.token)
 
         setTimeout(() => {
-          console.log(response);
           this.$store.dispatch("setToken", response.data.token);
           this.$store.dispatch("setUser", decoded)
 
           this.loginSuccess = false;
           this.showPanel = false;
-          this.$router.push({ name: "about" });
+          this.$router.push({ name: "home" });
         }, 2500);
       } catch (error) {
         console.log(error);

@@ -1,15 +1,12 @@
 <template>
   <v-app-bar
     flat
-    :color="$router.history.current['path'] === '/' || $router.history.current['path'] === '/login' || $router.history.current['path'] === '/register' || $router.history.current['path'] === '/admin/login' ? 'transparent' : '#eeeeee'"
-    :class="{'header-bar': ($router.history.current['path'] === '/' || $router.history.current['path'] === '/login' || $router.history.current['path'] === '/register' || $router.history.current['path'] === '/admin/login')}"
-    v-if="!$store.state.isUserLoggedIn"
   >
     <v-toolbar-title v-if="$router.history.current['path'] === '/'">
-      <router-link :to="{name: 'landing'}" class="brand">Checklist</router-link>
+      <router-link :to="{name: 'home'}" class="brand">Checklist</router-link>
     </v-toolbar-title>
     <v-toolbar-title v-else>
-      <router-link :to="{name: 'landing'}" class="brand-black">Checklist</router-link>
+      <router-link :to="{name: 'home'}" class="brand-black">Checklist</router-link>
     </v-toolbar-title>
     <!-- <v-menu
       bottom
@@ -54,13 +51,16 @@
       </v-card>
     </v-menu> -->
     <v-spacer></v-spacer>
-    <router-link :to="{name: 'login'}">
+
       <v-btn
         outlined
-        :color="`${$router.history.current['path'] === '/' ? 'white' : '#005082'}`"
-        v-if="!$store.state.isUserLoggedIn && $router.history.current['path'] !== '/login' && $router.history.current['path'] !== '/register' && $router.history.current['path'] !== '/admin/login'"
+        :to="{name: 'login'}"
+        v-if="!$store.state.isUserLoggedIn && $router.history.current['path'] !== '/login'"
       >Sign in</v-btn>
-    </router-link>
+      <v-btn v-if="$store.state.isUserLoggedIn" @click="logout">
+        Logout
+      </v-btn>
+    
   </v-app-bar>
 </template>
 
@@ -76,21 +76,13 @@ export default {
     async logout() {
       this.$store.dispatch("setToken", null);
       this.$store.dispatch("setUser", null);
-      this.$store.dispatch("setAuthorities", null);
-      this.permissions = false;
-      this.adminPermissions = false;
-          var auth2 = window.gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
-
       this.$router.push({
         name: "login",
       });
     },
     async toPath() {
       this.$router.push({
-        path: `/stories`
+        path: `/`
       });
     }
   }
@@ -112,7 +104,7 @@ export default {
 }
 .brand {
   font-family: "Julius Sans One", sans-serif;
-  color: white !important;
+  color: #1b262c !important;
   font-weight: 400 !important;
   font-size: 33px !important;
 }

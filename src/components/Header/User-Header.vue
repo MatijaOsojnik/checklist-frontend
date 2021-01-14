@@ -3,11 +3,6 @@
     <v-app-bar
       flat
       color="white"
-      :hide-on-scroll="
-        $router.history.current['name'] === 'story-create' ||
-        $router.history.current['name'] === 'story-update'
-          ? false
-          : true"
     >
       <v-toolbar-title class="d-xl-block d-lg-block d-md-block d-none">
         <router-link :to="{ name: 'stories' }" class="brand-black pa-4"
