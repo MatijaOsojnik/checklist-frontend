@@ -53,6 +53,7 @@
 <script>
 import AuthenticationPanel from "@/components/Authentication-Panel/Authentication-Panel";
 import AuthenticationService from "@/services/AuthenticationService";
+import jwtDecode from 'jwt-decode'
 // import axios from "axios";
 export default {
   components: {
@@ -79,7 +80,6 @@ export default {
         //   email: this.email,
         //   password: this.password,
         // });
-        console.log(response);
 
         this.showPanel = true;
 
@@ -87,9 +87,12 @@ export default {
           this.loginSuccess = true;
         }, 1500);
 
+          const decoded = jwtDecode(response.data.token)
+
         setTimeout(() => {
           console.log(response);
           this.$store.dispatch("setToken", response.data.token);
+          this.$store.dispatch("setUser", decoded)
 
           this.loginSuccess = false;
           this.showPanel = false;

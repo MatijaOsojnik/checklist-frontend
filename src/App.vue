@@ -1,10 +1,12 @@
 <template>
+<div id="app">
   <v-app>
     <main>
       <router-view />
       <Footer />
     </main>
   </v-app>
+</div>
 </template>
 
 <script>
