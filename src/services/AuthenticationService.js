@@ -5,7 +5,7 @@ export default {
         return axios.post('user/register', credentials)
     },
     login(credentials) {
-        return axios.post('auth/login', credentials)
+        return axios.post('user/login', credentials)
     },
     // googleAuth(user) {
     //     return axios.post('auth/google', user)

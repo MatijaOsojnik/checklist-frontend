@@ -52,8 +52,8 @@
 
 <script>
 import AuthenticationPanel from "@/components/Authentication-Panel/Authentication-Panel";
-// import AuthenticationService from "@/services/AuthenticationService";
-import axios from "axios";
+import AuthenticationService from "@/services/AuthenticationService";
+// import axios from "axios";
 export default {
   components: {
     AuthenticationPanel,
@@ -70,15 +70,15 @@ export default {
   methods: {
     async login() {
       try {
-        // const response = await AuthenticationService.login({
-        //   email: this.email,
-        //   password: this.password,
-        // });
-
-        const response = await axios.post('http://localhost:5000/api/user/login', {
+        const response = await AuthenticationService.login({
           email: this.email,
           password: this.password,
         });
+
+        // const response = await axios.post('http://localhost:5000/api/user/login', {
+        //   email: this.email,
+        //   password: this.password,
+        // });
         console.log(response);
 
         this.showPanel = true;
