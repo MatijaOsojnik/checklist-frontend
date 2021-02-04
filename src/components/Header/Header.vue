@@ -1,15 +1,20 @@
 <template>
 <div v-if="!$store.state.isUserLoggedIn">
   <v-app-bar
+    app
     flat
     color="white"
+    class=""
   >
   
-    <v-toolbar-title v-if="$router.history.current['path'] === '/'">
-      <router-link :to="{name: 'home'}" class="brand">Checklist</router-link>
-    </v-toolbar-title>
-    <v-toolbar-title v-else>
-      <router-link :to="{name: 'home'}" class="brand-black">Checklist</router-link>
+
+    <v-toolbar-title class="pa-2">
+      <!-- <router-link :to="{name: 'home'}" class="brand-black">
+        <v-img max-width="150px" class="pa-2" src="../../assets/checky.svg"></v-img>
+      </router-link> -->
+      <span class="d-block title pa-2">
+        {{ new Date().getCurrentDay() }}
+      </span>
     </v-toolbar-title>
     <!-- <v-menu
       bottom

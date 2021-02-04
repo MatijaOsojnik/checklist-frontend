@@ -14,6 +14,8 @@
         >
       </v-scroll-x-transition>
     </v-overlay>
+        <v-row justify="center" align-content="center" style="height: 80vh;">
+    <v-col cols="12">
     <AuthenticationPanel
       authenticationTypeText="Sign up"
       route-name="login"
@@ -41,20 +43,6 @@
             prepend-inner-icon="mdi-account-outline"
           />
         </div>
-        <!-- <div>
-          <v-text-field
-            label="Company ID"
-            v-model="company_id"
-            prepend-inner-icon="mdi-bank-outline"
-          />
-        </div>
-                <div>
-          <v-text-field
-            label="User Role"
-            v-model="user_role_id"
-            prepend-inner-icon="mdi-badge-account-horizontal-outline"
-          />
-        </div> -->
         <div>
           <v-text-field
             label="E-mail"
@@ -80,6 +68,8 @@
         >Register</v-btn
       >
     </AuthenticationPanel>
+    </v-col>
+        </v-row>
   </div>
 </template>
 

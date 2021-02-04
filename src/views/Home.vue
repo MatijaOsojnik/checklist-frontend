@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Header />
+
     <v-card elevation="2">
     <v-card-title>
     <p v-if="user">
@@ -17,11 +17,11 @@
 <script>
 // @ is an alias to /src
 import jwtDecode from 'jwt-decode'
-import Header from '@/components/Header/Header'
+
 export default {
   name: 'Home',
   components: {
-    Header
+
   },
   data: () => ({
     user: null,
@@ -35,3 +35,9 @@ export default {
 
 }
 </script>
+
+<style scoped>
+  .home {
+    height: 50vh;
+  }
+</style>

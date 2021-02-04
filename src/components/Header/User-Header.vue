@@ -1,6 +1,7 @@
 <template>
   <div v-if="$store.state.isUserLoggedIn">
     <v-app-bar
+    app
       flat
       color="white"
     >
@@ -8,9 +9,12 @@
       <router-link :to="{name: 'home'}" class="brand">Checklist</router-link>
     </v-toolbar-title> -->
     <v-toolbar-title>
-      <router-link :to="{name: 'home'}" class="brand-black">
-        <v-img max-width="150px" src="../../assets/checky-logo.svg"></v-img>
-      </router-link>
+      <!-- <router-link :to="{name: 'home'}" class="brand-black">
+        <v-img max-width="150px" src="../../assets/checky.svg"></v-img>
+      </router-link> -->
+            <span class="d-block display-1 pa-2">
+        {{ new Date().toLocaleString('sl-sl', {  weekday: 'long' }) }}.
+      </span>
     </v-toolbar-title>
 
       <v-spacer></v-spacer>

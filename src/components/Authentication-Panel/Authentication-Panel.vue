@@ -1,7 +1,6 @@
 <template>
 <div>
-    <Header />
-    <div height="100vh" class="main">
+    <div class="main">
           <v-container class="form-container ma-3">
             <div>
               <span class="sign-in-brand">{{authenticationTypeText}}</span>
@@ -25,10 +24,9 @@
 </template>
 
 <script>
-import Header from "@/components/Header/Header";
 export default {
   components: {
-    Header
+
   },
   props: ["authentication-type-text", "route-name", "link-name"]
 };
@@ -61,7 +59,6 @@ li {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100vh;
 }
 .form-input-container {
   display: flex;

@@ -1,5 +1,5 @@
 <template>
-  <div>
+<div>
     <v-overlay v-if="showPanel" absolute z-index="999" :opacity="0.1">
       <v-progress-circular
         indeterminate
@@ -12,6 +12,8 @@
         <v-alert type="success" v-if="loginSuccess">Login successful!</v-alert>
       </v-scroll-x-transition>
     </v-overlay>
+  <v-row justify="center" align-content="center" style="height: 80vh;">
+    <v-col cols="12">
     <AuthenticationPanel
       authenticationTypeText="Login"
       route-name="register"
@@ -45,13 +47,16 @@
         >Login</v-btn
       >
     </AuthenticationPanel>
-  </div>
+    </v-col>
+  </v-row>
+</div>
 </template>
 
 <script>
 import AuthenticationPanel from "@/components/Authentication-Panel/Authentication-Panel";
 import AuthenticationService from "@/services/AuthenticationService";
 import jwtDecode from 'jwt-decode'
+
 // import axios from "axios";
 export default {
   components: {
