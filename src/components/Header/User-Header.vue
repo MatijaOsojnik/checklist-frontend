@@ -9,12 +9,12 @@
       <router-link :to="{name: 'home'}" class="brand">Checklist</router-link>
     </v-toolbar-title> -->
     <v-toolbar-title>
-      <!-- <router-link :to="{name: 'home'}" class="brand-black">
+      <router-link :to="{name: 'home'}" class="brand-black">
         <v-img max-width="150px" src="../../assets/checky.svg"></v-img>
-      </router-link> -->
-            <span class="d-block display-1 pa-2">
+      </router-link>
+            <!-- <span class="d-block display-1 pa-2">
         {{ new Date().toLocaleString('sl-sl', {  weekday: 'long' }) }}.
-      </span>
+      </span> -->
     </v-toolbar-title>
 
       <v-spacer></v-spacer>

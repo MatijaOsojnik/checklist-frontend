@@ -4,6 +4,7 @@ import store from '@/store'
 import Home from '../views/Home'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
+import ProjectCreate from '@/views/projects/Create'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -28,6 +29,14 @@ const routes = [{
     component: Register,
     meta: {
       onlyGuestUser: true
+    }
+  },
+  {
+    path: '/projects/create',
+    name: 'project-create',
+    component: ProjectCreate,
+    meta: {
+      onlyAuthUser: true
     }
   },
   // {
