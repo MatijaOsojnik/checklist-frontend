@@ -36,14 +36,14 @@
                 ref="menu"
                 v-model="menu"
                 :close-on-content-click="false"
-                :return-value.sync="project.deadlineDate"
+                :return-value.sync="project.deadline"
                 transition="scale-transition"
                 offset-y
                 min-width="auto"
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                    v-model="project.deadlineDate"
+                    v-model="project.deadline"
                     prepend-icon="mdi-calendar"
                     readonly
                     label="Izberi datum"
@@ -52,7 +52,7 @@
                   ></v-text-field>
                 </template>
                 <v-date-picker
-                  v-model="project.deadlineDate"
+                  v-model="project.deadline"
                   no-title
                   scrollable
                 >
@@ -60,7 +60,7 @@
                   <v-btn text color="primary" @click="menu = false">
                     Prekini
                   </v-btn>
-                  <v-btn text color="primary" @click="$refs.menu.save(project.deadlineDate)">
+                  <v-btn text color="primary" @click="$refs.menu.save(project.deadline)">
                     OK
                   </v-btn>
                 </v-date-picker>
@@ -72,7 +72,7 @@
                 mode="out-in"
                 v-if="successfulProjectPost"
               >
-                <span>Uspešno ste ustvarili nov projekt</span>
+                <span>Uspešno ste ustvarili nov projekts</span>
               </v-alert>
             </v-scroll-x-transition>
             <v-scroll-x-transition>
@@ -107,7 +107,7 @@ export default {
     project: {
       title: ``,
       description: ``,
-      deadlineDate: new Date().toISOString().substr(0, 10),
+      deadline: new Date().toISOString().substr(0, 10),
     },
     rules: {
       short_description: (text) => text.length <= 60 || "Max 60 characters",
@@ -124,8 +124,8 @@ export default {
     async createProject() {
       this.waitBeforeClick = true;
       try {
-        const response = await ProjectService.post(this.project);
-
+        const response = await ProjectService.post(this.project, this.$store.state.token);
+      console.log(response)
         if (response) {
           this.successfulStoryPost = true;
           setTimeout(() => {

@@ -39,27 +39,26 @@
               </v-card>
             </v-hover>
           </v-col>
-          <div v-if="projects">
-            <v-col
-              v-for="project in projects"
-              :key="project"
-              class="col-12 col-xl-4 col-lg-4 col-md-4"
-            >
-              <v-card>
-                <v-img
-                  src="@/assets/eberhard-grossgasteiger-xC7Ho08RYF4-unsplash.jpg"
-                  class="white--text align-center"
-                  gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                  height="200px"
-                >
-                  <span class="text-center"
-                    >Nov Projekt
-                    <v-icon color="white" class="px-2">mdi-plus-circle</v-icon>
-                  </span>
-                </v-img>
-              </v-card>
-            </v-col>
-          </div>
+        </v-row>
+        <v-row v-if="projects">
+          <v-col
+            v-for="project in projects"
+            :key="project._id"
+            class="col-12 col-xl-4 col-lg-4 col-md-4"
+          >
+            <v-card>
+              <v-img
+                src="@/assets/eberhard-grossgasteiger-xC7Ho08RYF4-unsplash.jpg"
+                class="white--text align-center"
+                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                height="200px"
+              >
+                <span class="text-center card-title d-block">
+                  {{ project.title }}
+                </span>
+              </v-img>
+            </v-card>
+          </v-col>
         </v-row>
       </div>
     </div>
@@ -80,6 +79,7 @@ export default {
   }),
   mounted() {
     this.loadUser();
+    this.loadProjects();
   },
   methods: {
     loadUser() {
@@ -91,9 +91,9 @@ export default {
     },
     async loadProjects() {
       try {
-        const response = await ProjectService.index();
+        const response = await ProjectService.index(this.$store.state.token);
         if (response) {
-          this.projects = response.data;
+          this.projects = response.data.items;
         }
       } catch (err) {
         console.log(err);

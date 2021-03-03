@@ -1,16 +1,31 @@
 import axios from '@/services/axios'
-
 export default {
-    index() {
-        return axios.get('projects')
+    index(token) {
+        return axios.get('project', {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
     },
-    post(data) {
-        return axios.post('projects', data)
+    post(data, token) {
+        return axios.post('project', data, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
     },
-    put(data) {
-        return axios.put('projects', data)
+    put(data, token) {
+        return axios.put('project', data, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
     },
-    delete(id) {
-        return axios.delete('projects', id)
+    delete(id, token) {
+        return axios.delete('project', id, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
     }
 }
