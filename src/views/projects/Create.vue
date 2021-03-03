@@ -29,8 +29,42 @@
                 counter
                 maxlength="100"
                 aria-autocomplete="false"
-                v-model="project.short_description"
+                v-model="project.description"
               />
+              <label for="deadline">Zaključni rok (Opcijsko)</label>
+              <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="project.deadlineDate"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="project.deadlineDate"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    label="Izberi datum"
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="project.deadlineDate"
+                  no-title
+                  scrollable
+                >
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="menu = false">
+                    Prekini
+                  </v-btn>
+                  <v-btn text color="primary" @click="$refs.menu.save(project.deadlineDate)">
+                    OK
+                  </v-btn>
+                </v-date-picker>
+              </v-menu>
             </v-form>
             <v-scroll-x-transition>
               <v-alert
@@ -72,7 +106,8 @@ export default {
   data: () => ({
     project: {
       title: ``,
-      short_description: ``,
+      description: ``,
+      deadlineDate: new Date().toISOString().substr(0, 10),
     },
     rules: {
       short_description: (text) => text.length <= 60 || "Max 60 characters",
@@ -82,6 +117,8 @@ export default {
     waitBeforeClick: false,
     successfulProjectPost: false,
     errors: [],
+    menu: false,
+    modal: false,
   }),
   methods: {
     async createProject() {
@@ -100,7 +137,7 @@ export default {
           }, 3000);
         }
       } catch (err) {
-          console.log(err)
+        console.log(err);
         setTimeout(() => (this.waitBeforeClick = false), 3000);
         setTimeout(() => (this.errors = []), 5000);
       }

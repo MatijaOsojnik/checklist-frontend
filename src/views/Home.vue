@@ -1,5 +1,5 @@
 <template>
-  <v-container class="home">
+  <v-container fluid class="home">
     <v-card elevation="2">
       <v-card-title>
         <p v-if="user">HI {{ user.name }} {{ user.surname }}!</p>
