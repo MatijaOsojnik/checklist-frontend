@@ -7,6 +7,13 @@ export default {
             }
         })
     },
+    single(id, token) {
+        return axios.get(`project/${id}`, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
+    },
     post(data, token) {
         return axios.post('project', data, {
             headers: {

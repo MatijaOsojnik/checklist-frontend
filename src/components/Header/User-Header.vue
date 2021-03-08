@@ -151,7 +151,10 @@
                 <span>{{ $store.state.user.display_name }}</span>
               </router-link> -->
 
-              <v-btn class="" depressed small text block @click="logout">
+              <v-btn class="py-2" depressed text block :to="{ path: `/projects/create` }">
+                New Project
+              </v-btn>
+              <v-btn class="" depressed text block @click="logout">
                 Log out
               </v-btn>
             </div>

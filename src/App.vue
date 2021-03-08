@@ -5,7 +5,6 @@
       expand-on-hover
       app
       :mini-variant.sync="mini"
-      v-if="this.$store.state.isUserLoggedIn"
     >
       <div>
         <v-list-item class="px-2">
@@ -78,10 +77,8 @@ export default {
     ],
     mini: true,
   }),
-  mounted() {
-    if (this.$store.state.user) {
+  created() {
       this.user = this.$store.state.user;
-    }
   },
 };
 </script>

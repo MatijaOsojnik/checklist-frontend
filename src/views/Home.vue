@@ -6,13 +6,40 @@
         <p v-else>You should first log in!</p>
       </v-card-title>
     </v-card>
-    <div>
+    <div v-if="$store.state.isUserLoggedIn">
       <!-- <div v-if="projects" class="my-2">
         <v-title>Vsi projekti</v-title>
       </div> -->
       <div class="my-2">
         <p class="title">Vsi projekti</p>
-        <v-row>
+        <v-row v-if="projects">
+          <v-col
+            v-for="project in projects"
+            :key="project._id"
+            class="col-12 col-xl-4 col-lg-4 col-md-4"
+          >
+           <v-hover v-slot:default="{ hover }">
+            <v-card
+              :to="{ path: `/projects/${project._id}` }"
+              class="mx-auto"
+              raised
+              :elevation="hover ? 8 : 2"
+            >
+              <v-img
+                src="@/assets/joanna-kosinska-7ACuHoezUYk-unsplash (1).jpg"
+                class="white--text align-center"
+                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                height="200px"
+              >
+                <span class="text-center card-title d-block">
+                  {{ project.title }}
+                </span>
+              </v-img>
+            </v-card>
+           </v-hover>
+          </v-col>
+        </v-row>
+        <v-row v-else>
           <v-col class="col-12 col-xl-4 col-lg-4 col-md-4">
             <v-hover v-slot:default="{ hover }">
               <v-card
@@ -40,26 +67,6 @@
             </v-hover>
           </v-col>
         </v-row>
-        <v-row v-if="projects">
-          <v-col
-            v-for="project in projects"
-            :key="project._id"
-            class="col-12 col-xl-4 col-lg-4 col-md-4"
-          >
-            <v-card>
-              <v-img
-                src="@/assets/eberhard-grossgasteiger-xC7Ho08RYF4-unsplash.jpg"
-                class="white--text align-center"
-                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                height="200px"
-              >
-                <span class="text-center card-title d-block">
-                  {{ project.title }}
-                </span>
-              </v-img>
-            </v-card>
-          </v-col>
-        </v-row>
       </div>
     </div>
   </v-container>
@@ -76,6 +83,7 @@ export default {
   data: () => ({
     user: null,
     projects: null,
+    hover: 2
   }),
   mounted() {
     this.loadUser();
