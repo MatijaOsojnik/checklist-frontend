@@ -5,6 +5,7 @@
       expand-on-hover
       app
       :mini-variant.sync="mini"
+      v-if="$store.state.token"
     >
       <div>
         <v-list-item class="px-2">
@@ -78,7 +79,7 @@ export default {
     mini: true,
   }),
   created() {
-      this.user = this.$store.state.user;
+    this.user = this.$store.state.user;
   },
 };
 </script>

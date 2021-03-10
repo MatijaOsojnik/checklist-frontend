@@ -46,7 +46,7 @@
               </v-card>
             </v-col>
             <v-col>
-              <v-card class="mt-4 mx-auto  py-2">
+              <v-card class="mt-4 mx-auto py-2">
                 <v-sheet
                   class="v-sheet--offset mx-auto my-2"
                   color="cyan"
@@ -78,7 +78,23 @@
                     >last registration 26 minutes ago</span
                   >
                 </v-card-text>
-              </v-card> 
+              </v-card>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col class="col-4" v-for="list in lists" :key="list._id">
+              <v-card>
+                <v-card-title>
+                  {{list.title}}
+                </v-card-title>
+              </v-card>
+            </v-col>
+            <v-col clas="col-4">
+              <v-form>
+                <v-text-field dense name="list_name">
+
+                </v-text-field>
+              </v-form>
             </v-col>
           </v-row>
         </v-card>

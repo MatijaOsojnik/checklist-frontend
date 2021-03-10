@@ -15,7 +15,7 @@
       </v-scroll-x-transition>
     </v-overlay>
         <v-row justify="center" align-content="center" style="height: 80vh;">
-    <v-col cols="12">
+    <v-col cols="8">
     <AuthenticationPanel
       authenticationTypeText="Sign up"
       route-name="login"
