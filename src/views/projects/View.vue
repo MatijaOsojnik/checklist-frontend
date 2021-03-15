@@ -9,7 +9,7 @@
           <v-card-text>
             {{ project.description }}
           </v-card-text>
-          <v-row class="mx-2">
+          <!-- <v-row class="mx-2">
             <v-col>
               <v-card class="mt-4 mx-auto py-2">
                 <v-sheet
@@ -77,24 +77,81 @@
                   <span class="caption grey--text font-weight-light"
                     >last registration 26 minutes ago</span
                   >
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row> --> 
+          <v-row v-if="lists">
+            <v-col
+              class="col-3 my-4 mx-4"
+              v-for="list in lists"
+              :key="list._id"
+            >
+              <v-card>
+                <v-card-title>
+                  {{ list.title }}
+                </v-card-title>
+              </v-card>
+            </v-col>
+            <v-col class="col-3 my-4 mx-4">
+              <v-card>
+                <v-card-text>
+                  <v-btn block v-if="!newList" @click="newList = true"
+                    ><v-icon>mdi-plus</v-icon>Ustvari stolpec</v-btn
+                  >
+
+                  <div v-if="newList">
+                    <v-form>
+                      <v-text-field
+                        class="mx-2"
+                        dense
+                        solo
+                        name="list_name"
+                        v-model="list_name"
+                      >
+                      </v-text-field>
+                    </v-form>
+
+                    <v-btn class="mx-2" color="success" @click="createList()">
+                      Ustvari
+                    </v-btn>
+                    <v-btn icon color="danger" @click="newList = false">
+                      <v-icon>mdi-close-circle</v-icon>
+                    </v-btn>
+                  </div>
                 </v-card-text>
               </v-card>
             </v-col>
           </v-row>
-          <v-row>
-            <v-col class="col-4" v-for="list in lists" :key="list._id">
+          <v-row v-else>
+            <v-col class="col-3 my-4 mx-4">
               <v-card>
-                <v-card-title>
-                  {{list.title}}
-                </v-card-title>
-              </v-card>
-            </v-col>
-            <v-col clas="col-4">
-              <v-form>
-                <v-text-field dense name="list_name">
+                <v-card-text>
+                  <v-btn block v-if="!newList" @click="newList = true"
+                    ><v-icon>mdi-plus</v-icon>Ustvari stolpec</v-btn
+                  >
 
-                </v-text-field>
-              </v-form>
+                  <div v-if="newList">
+                    <v-form>
+                      <v-text-field
+                        class="mx-2"
+                        dense
+                        solo
+                        name="list_name"
+                        v-model="list_name"
+                      >
+                      </v-text-field>
+                    </v-form>
+
+                    <v-btn class="mx-2" color="success" @click="createList()">
+                      Ustvari
+                    </v-btn>
+                    <v-btn icon color="danger" @click="newList = false">
+                      <v-icon>mdi-close-circle</v-icon>
+                    </v-btn>
+                  </div>
+                </v-card-text>
+              </v-card>
             </v-col>
           </v-row>
         </v-card>
@@ -105,12 +162,17 @@
 
 <script>
 import ProjectService from "@/services/ProjectService";
+import ItemService from "@/services/ItemService";
+
 export default {
   data: () => ({
     project: null,
     errors: [],
     menu: false,
     modal: false,
+    newList: false,
+    lists: null,
+    list_name: "",
     type: "trend",
     value: [200, 675, 410, 390, 310, 460, 250, 240],
     labels: [
@@ -126,10 +188,13 @@ export default {
   }),
   mounted() {
     this.loadProject();
+    this.loadLists();
   },
+  // computed() {
+  //   this.loadLists();
+  // },
   methods: {
     async loadProject() {
-      this.waitBeforeClick = true;
       try {
         const id = this.$route.params.id;
         const response = await ProjectService.single(
@@ -138,6 +203,40 @@ export default {
         );
         if (response) {
           this.project = response.data.item;
+        }
+      } catch (err) {
+        setTimeout(() => (this.errors = []), 5000);
+      }
+    },
+    async loadLists() {
+      try {
+        const id = this.$route.params.id;
+        const response = await ItemService.allLists(
+          id,  
+          this.$store.state.token
+        );
+        
+        if (response) {
+          this.lists = response.data.items;
+        }
+      } catch (err) {
+        setTimeout(() => (this.errors = []), 5000);
+      }
+    },
+    async createList() {
+      try {
+        const id = this.$route.params.id;
+        console.log(this.list_name);
+        const response = await ItemService.postList(
+          this.list_name,
+          id,
+          this.$store.state.token
+        );
+        if (response) {
+          this.lists = response.data.items;
+          this.loadLists();
+          this.list_name = "";
+          console.log(response.data);
         }
       } catch (err) {
         setTimeout(() => (this.waitBeforeClick = false), 3000);
