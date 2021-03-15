@@ -80,10 +80,13 @@
                 </v-card-text>
               </v-card>
             </v-col>
-          </v-row> --> 
+          </v-row> -->
+          <!-- <div class="container">
+
+          </div> -->
           <v-row v-if="lists">
             <v-col
-              class="col-3 my-4 mx-4"
+              class="col-12 col-md-6 col-lg-4 col-xl-4 my-4"
               v-for="list in lists"
               :key="list._id"
             >
@@ -91,6 +94,45 @@
                 <v-card-title>
                   {{ list.title }}
                 </v-card-title>
+                <v-divider></v-divider>
+                <v-card-text>
+                  <v-list flat>
+                    <v-list-item>
+                      <v-btn
+                        block
+                        color="primary"
+                        v-if="list.newElement"
+                        @click="list.newElement = true"
+                      >
+                        <v-icon>mdi-plus</v-icon> Ustvari element
+                      </v-btn>
+                      <div v-if="list.newElement">
+                        <v-form>
+                          <v-textarea
+                                solo
+                                rows="1"
+                                auto-grow
+                                placeholder="Vnesi ime novega elementa"
+                                v-model="list.newItem"
+                            >
+                          </v-textarea>
+                            
+                        </v-form>
+
+                        <v-btn
+                          class="mr-2"
+                          color="success"
+                          @click="createItem(list._id)"
+                        >
+                          Ustvari
+                        </v-btn>
+                        <v-btn icon color="danger" @click="list.newElement = false">
+                          <v-icon>mdi-close-circle</v-icon>
+                        </v-btn>
+                      </div>
+                    </v-list-item>
+                  </v-list>
+                </v-card-text>
               </v-card>
             </v-col>
             <v-col class="col-3 my-4 mx-4">
@@ -104,6 +146,8 @@
                     <v-form>
                       <v-text-field
                         class="mx-2"
+                        placeholder="Vnesi ime nove vrstice"
+                        max="60"
                         dense
                         solo
                         name="list_name"
@@ -130,7 +174,6 @@
                   <v-btn block v-if="!newList" @click="newList = true"
                     ><v-icon>mdi-plus</v-icon>Ustvari stolpec</v-btn
                   >
-
                   <div v-if="newList">
                     <v-form>
                       <v-text-field
@@ -171,8 +214,10 @@ export default {
     menu: false,
     modal: false,
     newList: false,
+    newElement: false,
     lists: null,
     list_name: "",
+    item_name: "",
     type: "trend",
     value: [200, 675, 410, 390, 310, 460, 250, 240],
     labels: [
@@ -212,10 +257,10 @@ export default {
       try {
         const id = this.$route.params.id;
         const response = await ItemService.allLists(
-          id,  
+          id,
           this.$store.state.token
         );
-        
+
         if (response) {
           this.lists = response.data.items;
         }
@@ -237,6 +282,24 @@ export default {
           this.loadLists();
           this.list_name = "";
           console.log(response.data);
+        }
+      } catch (err) {
+        setTimeout(() => (this.waitBeforeClick = false), 3000);
+        setTimeout(() => (this.errors = []), 5000);
+      }
+    },
+    async createItem(listId) {
+      try {
+        const id = listId;
+        const response = await ItemService.postItem(
+          this.item_name,
+          id,
+          this.$store.state.token
+        );
+        if (response) {
+          this.lists = response.data.items;
+          this.loadLists();
+          this.item_name = "";
         }
       } catch (err) {
         setTimeout(() => (this.waitBeforeClick = false), 3000);
