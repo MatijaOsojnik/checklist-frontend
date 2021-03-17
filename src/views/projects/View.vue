@@ -9,8 +9,45 @@
           <v-card-text>
             {{ project.description }}
           </v-card-text>
-          <!-- <v-row class="mx-2">
+          <v-row class="mx-2" v-if="lists">
             <v-col>
+              <v-card class="mt-4 mx-auto py-2">
+                <!-- <v-sheet
+                  class="v-sheet--offset mx-auto my-2"
+                  color="cyan"
+                  elevation="12"
+                  max-width="calc(100% - 32px)"
+                >
+                  <v-sparkline
+                    :value="lists.length"
+                    :labels="labels"
+                    color="rgba(255, 255, 255, .7)"
+                    height="100"
+                    padding="24"
+                    stroke-linecap="round"
+                    smooth
+                    auto-draw
+                  ></v-sparkline>
+                </v-sheet> -->
+
+                <v-card-text class="pt-0">
+                  <div class="title font-weight-light mb-2">
+                    Število stolpcev
+                  </div>
+                  <div class="subheading font-weight-light grey--text">
+                    Današnji dan
+                  </div>
+                  <v-divider class="my-2"></v-divider>
+                  <v-icon class="mr-2" small> mdi-clock </v-icon>
+                  <span class="caption grey--text font-weight-light"
+                    >Zadnji ustvarjen <timeago :datetime="lastListCreated" :auto-update="60"></timeago>
+                    </span> 
+
+                  
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <!-- <v-col>
               <v-card class="mt-4 mx-auto py-2">
                 <v-sheet
                   class="v-sheet--offset mx-auto my-2"
@@ -44,43 +81,8 @@
                   >
                 </v-card-text>
               </v-card>
-            </v-col>
-            <v-col>
-              <v-card class="mt-4 mx-auto py-2">
-                <v-sheet
-                  class="v-sheet--offset mx-auto my-2"
-                  color="cyan"
-                  elevation="12"
-                  max-width="calc(100% - 32px)"
-                >
-                  <v-sparkline
-                    :value="value"
-                    :labels="labels"
-                    color="rgba(255, 255, 255, .7)"
-                    height="100"
-                    padding="24"
-                    stroke-linecap="round"
-                    smooth
-                    auto-draw
-                  ></v-sparkline>
-                </v-sheet>
-
-                <v-card-text class="pt-0">
-                  <div class="title font-weight-light mb-2">
-                    User Registrations
-                  </div>
-                  <div class="subheading font-weight-light grey--text">
-                    Last Campaign Performance
-                  </div>
-                  <v-divider class="my-2"></v-divider>
-                  <v-icon class="mr-2" small> mdi-clock </v-icon>
-                  <span class="caption grey--text font-weight-light"
-                    >last registration 26 minutes ago</span
-                  >
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row> -->
+            </v-col> -->
+          </v-row>
           <!-- <div class="container">
 
           </div> -->
@@ -92,41 +94,63 @@
             >
               <v-card>
                 <v-card-title>
-                  {{ list.title }}
+                  {{ list.list.title }}
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
                   <v-list flat>
                     <v-list-item>
+                      <v-progress-linear
+                        :value="100 / list.items.length"
+                        color="success"
+                        height="25"
+                        v-if="list.items.length>0"
+                      >
+                        <template v-slot:default="{ value }">
+                          <strong>{{ Math.ceil(value) }}%</strong>
+                        </template></v-progress-linear
+                      >
+                    </v-list-item>
+                    <!-- ITEM CARD -->
+                    <v-list-item v-for="item in list.items" :key="item._id">
+                      <v-checkbox
+                        color="success"
+                        :label="item.title"
+                        :value="item._id"
+                      ></v-checkbox>
+                      <!-- <span class="d-block font-weight-bold">{{
+                        item.title
+                      }}</span> -->
+                    </v-list-item>
+                    <v-list-item>
                       <v-btn
                         block
                         color="primary"
-                        v-if="list.newElement"
-                        @click="list.newElement = true"
+                        v-if="!newElement"
+                        @click="newElement = true"
                       >
                         <v-icon>mdi-plus</v-icon> Ustvari element
                       </v-btn>
-                      <div v-if="list.newElement">
+                      <div v-if="newElement">
                         <v-form>
                           <v-textarea
-                                solo
-                                rows="1"
-                                auto-grow
-                                placeholder="Vnesi ime novega elementa"
-                                v-model="list.newItem"
-                            >
+                            solo
+                            rows="1"
+                            auto-grow
+                            placeholder="Vnesi ime novega elementa"
+                            v-model="item_name"
+                          >
                           </v-textarea>
-                            
                         </v-form>
 
                         <v-btn
                           class="mr-2"
                           color="success"
-                          @click="createItem(list._id)"
+                          @click="createItem(list.list._id)"
                         >
                           Ustvari
                         </v-btn>
-                        <v-btn icon color="danger" @click="list.newElement = false">
+                        <v-btn icon color="danger" @click="newElement = false">
                           <v-icon>mdi-close-circle</v-icon>
                         </v-btn>
                       </div>
@@ -141,7 +165,6 @@
                   <v-btn block v-if="!newList" @click="newList = true"
                     ><v-icon>mdi-plus</v-icon>Ustvari stolpec</v-btn
                   >
-
                   <div v-if="newList">
                     <v-form>
                       <v-text-field
@@ -215,6 +238,7 @@ export default {
     modal: false,
     newList: false,
     newElement: false,
+
     lists: null,
     list_name: "",
     item_name: "",
@@ -235,9 +259,18 @@ export default {
     this.loadProject();
     this.loadLists();
   },
-  // computed() {
-  //   this.loadLists();
-  // },
+  computed: {
+    lastListCreated() {
+      
+      if(this.lists) {
+        const length = this.lists.length;
+        const last = this.lists[length-1].list.dateAdd
+        return last;
+      } else {
+        return null;
+      }
+    }
+  },
   methods: {
     async loadProject() {
       try {
@@ -261,6 +294,8 @@ export default {
           this.$store.state.token
         );
 
+        console.log(response.data.items[0]);
+
         if (response) {
           this.lists = response.data.items;
         }
@@ -281,7 +316,6 @@ export default {
           this.lists = response.data.items;
           this.loadLists();
           this.list_name = "";
-          console.log(response.data);
         }
       } catch (err) {
         setTimeout(() => (this.waitBeforeClick = false), 3000);
@@ -298,6 +332,7 @@ export default {
         );
         if (response) {
           this.lists = response.data.items;
+          this.newElement = false;
           this.loadLists();
           this.item_name = "";
         }

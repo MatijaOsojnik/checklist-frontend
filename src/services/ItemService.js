@@ -1,7 +1,18 @@
 import axios from '@/services/axios'
 export default {
     allLists(parentItem, token) {
-        return axios.post('item/all', {parentItem: parentItem}, {
+        return axios.post('item/all', {
+            parentItem: parentItem
+        }, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
+    },
+    allItems(parentItem, token) {
+        return axios.post('item/all', {
+            parentItem: parentItem
+        }, {
             headers: {
                 Authorization: 'Bearer ' + token,
             }
@@ -15,7 +26,20 @@ export default {
         })
     },
     postList(data, parentId, token) {
-        return axios.post('item', {parentItem: parentId, title: data}, {
+        return axios.post('item', {
+            parentItem: parentId,
+            title: data
+        }, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
+    },
+    postItem(data, parentId, token) {
+        return axios.post('item', {
+            parentItem: parentId,
+            title: data
+        }, {
             headers: {
                 Authorization: 'Bearer ' + token,
             }
