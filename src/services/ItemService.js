@@ -52,8 +52,8 @@ export default {
             }
         })
     },
-    delete(id, token) {
-        return axios.delete('item', id, {
+    deleteList(id, token) {
+        return axios.delete(`item/${id}`, {
             headers: {
                 Authorization: 'Bearer ' + token,
             }

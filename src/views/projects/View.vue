@@ -40,10 +40,12 @@
                   <v-divider class="my-2"></v-divider>
                   <v-icon class="mr-2" small> mdi-clock </v-icon>
                   <span class="caption grey--text font-weight-light"
-                    >Zadnji ustvarjen <timeago :datetime="lastListCreated" :auto-update="60"></timeago>
-                    </span> 
-
-                  
+                    >Zadnji ustvarjen
+                    <timeago
+                      :datetime="lastListCreated"
+                      :auto-update="60"
+                    ></timeago>
+                  </span>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -86,53 +88,89 @@
           <!-- <div class="container">
 
           </div> -->
-          <v-row v-if="lists">
-            <v-col
-              class="col-12 col-md-6 col-lg-4 col-xl-4 my-4"
-              v-for="list in lists"
-              :key="list._id"
-            >
-              <v-card>
-                <v-card-title>
-                  {{ list.list.title }}
-                </v-card-title>
-                <v-divider></v-divider>
-                <v-card-text>
-                  <v-list flat>
-                    <v-list-item>
-                      <v-progress-linear
-                        :value="100 / list.items.length"
-                        color="success"
-                        height="25"
-                        v-if="list.items.length>0"
-                      >
-                        <template v-slot:default="{ value }">
-                          <strong>{{ Math.ceil(value) }}%</strong>
-                        </template></v-progress-linear
-                      >
-                    </v-list-item>
-                    <!-- ITEM CARD -->
-                    <v-list-item v-for="item in list.items" :key="item._id">
-                      <v-checkbox
-                        color="success"
-                        :label="item.title"
-                        :value="item._id"
-                      ></v-checkbox>
-                      <!-- <span class="d-block font-weight-bold">{{
+          <div class="list-container">
+            <v-row v-if="lists" style="overflow-x: scroll">
+              <v-col
+                class="col-12 col-md-6 col-lg-4 col-xl-4 my-4"
+                v-for="list in lists"
+                :key="list._id"
+              >
+                <v-card>
+                  <v-card-title>
+                    {{ list.list.title }}
+                    <v-spacer></v-spacer>
+
+                    <v-menu
+                      bottom
+                      offset-y
+                      transition="scroll-y-transition"
+                      :close-on-content-click="false"
+                      open-on-hover
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-btn color="black" v-on="on" icon>
+                          <v-icon>mdi-dots-vertical</v-icon>
+                        </v-btn>
+                      </template>
+                      <v-card max-width="200px">
+                        <v-container fluid>
+                          <div
+                            class="d-flex justify-center align-center flex-column ma-3"
+                          >
+                            <v-btn class="py-2" depressed text block>
+                              Uredi
+                            </v-btn>
+                            <v-btn
+                              depressed
+                              text
+                              block
+                              @click="deleteList(list.list._id)"
+                            >
+                              Izbriši
+                            </v-btn>
+                          </div>
+                        </v-container>
+                      </v-card>
+                    </v-menu>
+                  </v-card-title>
+                  <v-divider></v-divider>
+                  <v-card-text>
+                    <v-list flat>
+                      <v-list-item v-if="list.items.length > 0">
+                        <v-progress-linear
+                          :value="100 / list.items.length"
+                          color="success"
+                          height="25"
+                        >
+                          <template v-slot:default="{ value }">
+                            <strong>{{ Math.round(value) }}%</strong>
+                          </template></v-progress-linear
+                        >
+                      </v-list-item>
+                      <!-- ITEM CARD -->
+                      <v-list-item v-for="item in list.items" :key="item._id">
+                        <v-checkbox
+                          color="success"
+                          :label="item.title"
+                          :value="item._id"
+                        ></v-checkbox>
+                        <!-- <span class="d-block font-weight-bold">{{
                         item.title
                       }}</span> -->
-                    </v-list-item>
-                    <v-list-item>
-                      <v-btn
-                        block
-                        color="primary"
-                        v-if="!newElement"
-                        @click="newElement = true"
-                      >
-                        <v-icon>mdi-plus</v-icon> Ustvari element
-                      </v-btn>
-                      <div v-if="newElement">
-                        <v-form>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-btn
+                          block
+                          color="primary"
+                          v-if="newElement[0] != list.list._id"
+                          @click="openNewElementField(list.list._id)"
+                        >
+                          <v-icon>mdi-plus</v-icon> Ustvari element
+                        </v-btn>
+                        <div
+                          style="width: 100%"
+                          v-if="newElement[0] == list.list._id"
+                        >
                           <v-textarea
                             solo
                             rows="1"
@@ -141,85 +179,89 @@
                             v-model="item_name"
                           >
                           </v-textarea>
-                        </v-form>
 
-                        <v-btn
-                          class="mr-2"
-                          color="success"
-                          @click="createItem(list.list._id)"
+                          <v-btn
+                            class="mr-2"
+                            color="success"
+                            @click="createItem(list.list._id)"
+                          >
+                            Ustvari
+                          </v-btn>
+                          <v-btn
+                            icon
+                            color="danger"
+                            @click="newElement = false"
+                          >
+                            <v-icon>mdi-close-circle</v-icon>
+                          </v-btn>
+                        </div>
+                      </v-list-item>
+                    </v-list>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+              <v-col class="col-3 my-4 mx-4">
+                <v-card>
+                  <v-card-text>
+                    <v-btn block v-if="!newList" @click="newList = true"
+                      ><v-icon>mdi-plus</v-icon>Ustvari stolpec</v-btn
+                    >
+                    <div v-if="newList">
+                      <v-form>
+                        <v-text-field
+                          class="mx-2"
+                          placeholder="Vnesi ime nove vrstice"
+                          max="60"
+                          dense
+                          solo
+                          name="list_name"
+                          v-model="list_name"
                         >
-                          Ustvari
-                        </v-btn>
-                        <v-btn icon color="danger" @click="newElement = false">
-                          <v-icon>mdi-close-circle</v-icon>
-                        </v-btn>
-                      </div>
-                    </v-list-item>
-                  </v-list>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col class="col-3 my-4 mx-4">
-              <v-card>
-                <v-card-text>
-                  <v-btn block v-if="!newList" @click="newList = true"
-                    ><v-icon>mdi-plus</v-icon>Ustvari stolpec</v-btn
-                  >
-                  <div v-if="newList">
-                    <v-form>
-                      <v-text-field
-                        class="mx-2"
-                        placeholder="Vnesi ime nove vrstice"
-                        max="60"
-                        dense
-                        solo
-                        name="list_name"
-                        v-model="list_name"
-                      >
-                      </v-text-field>
-                    </v-form>
+                        </v-text-field>
+                      </v-form>
 
-                    <v-btn class="mx-2" color="success" @click="createList()">
-                      Ustvari
-                    </v-btn>
-                    <v-btn icon color="danger" @click="newList = false">
-                      <v-icon>mdi-close-circle</v-icon>
-                    </v-btn>
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-          <v-row v-else>
-            <v-col class="col-3 my-4 mx-4">
-              <v-card>
-                <v-card-text>
-                  <v-btn block v-if="!newList" @click="newList = true"
-                    ><v-icon>mdi-plus</v-icon>Ustvari stolpec</v-btn
-                  >
-                  <div v-if="newList">
-                    <v-form>
-                      <v-text-field
-                        class="mx-2"
-                        dense
-                        solo
-                        name="list_name"
-                        v-model="list_name"
-                      >
-                      </v-text-field>
-                    </v-form>
+                      <v-btn class="mx-2" color="success" @click="createList()">
+                        Ustvari
+                      </v-btn>
+                      <v-btn icon color="danger" @click="newList = false">
+                        <v-icon>mdi-close-circle</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+            <v-row v-else>
+              <v-col class="col-3 my-4 mx-4">
+                <v-card>
+                  <v-card-text>
+                    <v-btn block v-if="!newList" @click="newList = true"
+                      ><v-icon>mdi-plus</v-icon>Ustvari stolpec</v-btn
+                    >
+                    <div v-if="newList">
+                      <v-form>
+                        <v-text-field
+                          class="mx-2"
+                          dense
+                          solo
+                          name="list_name"
+                          v-model="list_name"
+                        >
+                        </v-text-field>
+                      </v-form>
 
-                    <v-btn class="mx-2" color="success" @click="createList()">
-                      Ustvari
-                    </v-btn>
-                    <v-btn icon color="danger" @click="newList = false">
-                      <v-icon>mdi-close-circle</v-icon>
-                    </v-btn>
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
+                      <v-btn class="mx-2" color="success" @click="createList()">
+                        Ustvari
+                      </v-btn>
+                      <v-btn icon color="danger" @click="newList = false">
+                        <v-icon>mdi-close-circle</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </div>
         </v-card>
       </v-flex>
     </v-layout>
@@ -237,7 +279,7 @@ export default {
     menu: false,
     modal: false,
     newList: false,
-    newElement: false,
+    newElement: [],
 
     lists: null,
     list_name: "",
@@ -261,15 +303,14 @@ export default {
   },
   computed: {
     lastListCreated() {
-      
-      if(this.lists) {
+      if (this.lists) {
         const length = this.lists.length;
-        const last = this.lists[length-1].list.dateAdd
+        const last = this.lists[length - 1].list.dateAdd;
         return last;
       } else {
         return null;
       }
-    }
+    },
   },
   methods: {
     async loadProject() {
@@ -341,9 +382,30 @@ export default {
         setTimeout(() => (this.errors = []), 5000);
       }
     },
+    async deleteList(listId) {
+      try {
+        const id = listId;
+        const response = await ItemService.deleteList(
+          id,
+          this.$store.state.token
+        );
+        if (response) {
+          this.loadLists();
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    openNewElementField(listId) {
+      this.newElement = [];
+      this.newElement.push(listId);
+    },
   },
 };
 </script>
 
 <style>
+  .list-container {
+    overflow-x: scroll;
+  }
 </style>
