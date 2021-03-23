@@ -52,6 +52,13 @@ export default {
             }
         })
     },
+    updateListItems(itemId, newListId, token) {
+        return axios.put(`item/${itemId}`, {newListId: newListId}, {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+    },
     deleteList(id, token) {
         return axios.delete(`item/${id}`, {
             headers: {

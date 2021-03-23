@@ -89,7 +89,7 @@
 
           </div> -->
           <div class="list-container">
-            <v-row v-if="lists" style="overflow-x: scroll">
+            <v-row v-if="lists" class="">
               <v-col
                 class="col-12 col-md-6 col-lg-4 col-xl-4 my-4"
                 v-for="list in lists"
@@ -147,17 +147,23 @@
                           </template></v-progress-linear
                         >
                       </v-list-item>
+
                       <!-- ITEM CARD -->
-                      <v-list-item v-for="item in list.items" :key="item._id">
-                        <v-checkbox
-                          color="success"
-                          :label="item.title"
-                          :value="item._id"
-                        ></v-checkbox>
-                        <!-- <span class="d-block font-weight-bold">{{
-                        item.title
-                      }}</span> -->
-                      </v-list-item>
+
+                      <draggable
+                        class="kanban-column"
+                        :list="list.items"
+                        group="tasks"
+                        :move="checkMove"
+                      >
+                        <v-list-item v-for="item in list.items" :key="item._id">
+                          <v-checkbox
+                            color="success"
+                            :label="item.title"
+                            :value="item._id"
+                          ></v-checkbox>
+                        </v-list-item>
+                      </draggable>
                       <v-list-item>
                         <v-btn
                           block
@@ -271,8 +277,12 @@
 <script>
 import ProjectService from "@/services/ProjectService";
 import ItemService from "@/services/ItemService";
+import draggable from "vuedraggable";
 
 export default {
+  components: {
+    draggable,
+  },
   data: () => ({
     project: null,
     errors: [],
@@ -311,6 +321,11 @@ export default {
         return null;
       }
     },
+    //     checkMove: function(evt){
+    //       console.log(evt.draggedContect.element._id)
+    //     return (evt.draggedContext.element.name!=='apple');
+
+    // }
   },
   methods: {
     async loadProject() {
@@ -335,9 +350,8 @@ export default {
           this.$store.state.token
         );
 
-        console.log(response.data.items[0]);
-
         if (response) {
+          console.log(response.data.items);
           this.lists = response.data.items;
         }
       } catch (err) {
@@ -400,12 +414,28 @@ export default {
       this.newElement = [];
       this.newElement.push(listId);
     },
+    async checkMove(evt) {
+      console.log(evt.relatedContext.list);
+      const newListId = evt.relatedContext.element.parentItem
+      const itemId = evt.draggedContext.element._id
+
+      // const listId = evt.draggedContext.element.parentItem
+      const response = await ItemService.updateListItems(
+        itemId,
+        newListId,
+        this.$store.state.token
+      );
+      console.log(response)
+    },
+    log(el) {
+      console.log(el);
+    },
   },
 };
 </script>
 
 <style>
-  .list-container {
-    overflow-x: scroll;
-  }
+.kanban-column {
+  min-height: 300px;
+}
 </style>
