@@ -5,14 +5,13 @@
         <v-card class="mx-auto" v-if="project">
           <v-toolbar flat color="#617BE3" dark>
             <v-toolbar-title>{{ project.title }}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn color="dark" :to="{path: `/projects/${project._id}/stats`}">Statistika</v-btn>
           </v-toolbar>
-          <v-card-text>
-            {{ project.description }}
-          </v-card-text>
-          <v-row class="mx-2" v-if="lists">
+          <!-- <v-row class="mx-2" v-if="lists">
             <v-col>
               <v-card class="mt-4 mx-auto py-2">
-                <!-- <v-sheet
+                <v-sheet
                   class="v-sheet--offset mx-auto my-2"
                   color="cyan"
                   elevation="12"
@@ -28,7 +27,7 @@
                     smooth
                     auto-draw
                   ></v-sparkline>
-                </v-sheet> -->
+                </v-sheet>
 
                 <v-card-text class="pt-0">
                   <div class="title font-weight-light mb-2">
@@ -49,7 +48,7 @@
                 </v-card-text>
               </v-card>
             </v-col>
-            <!-- <v-col>
+            <v-col>
               <v-card class="mt-4 mx-auto py-2">
                 <v-sheet
                   class="v-sheet--offset mx-auto my-2"
@@ -83,191 +82,43 @@
                   >
                 </v-card-text>
               </v-card>
-            </v-col> -->
-          </v-row>
-          <!-- <div class="container">
+            </v-col> 
+          </v-row> -->
 
-          </div> -->
-          <div class="list-container">
-            <v-row v-if="lists" class="">
-              <v-col
-                class="col-12 col-md-6 col-lg-4 col-xl-4 my-4"
-                v-for="list in lists"
-                :key="list._id"
-              >
-                <v-card>
-                  <v-card-title>
-                    {{ list.list.title }}
-                    <v-spacer></v-spacer>
-
-                    <v-menu
-                      bottom
-                      offset-y
-                      transition="scroll-y-transition"
-                      :close-on-content-click="false"
-                      open-on-hover
+          <div class="list-container d-flex" v-if="lists">
+            <div v-for="list in lists" :key="list._id">
+              <ListCard :list="list" />
+            </div>
+            <v-card min-width="400px" height="100%" class="my-4 mx-5">
+              <v-card-text>
+                <v-btn block v-if="!newList" @click="newList = true"
+                  ><v-icon>mdi-plus</v-icon>Ustvari stolpec</v-btn
+                >
+                <div v-if="newList">
+                  <v-form>
+                    <v-text-field
+                      class="mx-2"
+                      placeholder="Vnesi ime nove vrstice"
+                      max="60"
+                      dense
+                      solo
+                      name="list_name"
+                      v-model="list_name"
                     >
-                      <template v-slot:activator="{ on }">
-                        <v-btn color="black" v-on="on" icon>
-                          <v-icon>mdi-dots-vertical</v-icon>
-                        </v-btn>
-                      </template>
-                      <v-card max-width="200px">
-                        <v-container fluid>
-                          <div
-                            class="d-flex justify-center align-center flex-column ma-3"
-                          >
-                            <v-btn class="py-2" depressed text block>
-                              Uredi
-                            </v-btn>
-                            <v-btn
-                              depressed
-                              text
-                              block
-                              @click="deleteList(list.list._id)"
-                            >
-                              Izbriši
-                            </v-btn>
-                          </div>
-                        </v-container>
-                      </v-card>
-                    </v-menu>
-                  </v-card-title>
-                  <v-divider></v-divider>
-                  <v-card-text>
-                    <v-list flat>
-                      <v-list-item v-if="list.items.length > 0">
-                        <v-progress-linear
-                          :value="100 / list.items.length"
-                          color="success"
-                          height="25"
-                        >
-                          <template v-slot:default="{ value }">
-                            <strong>{{ Math.round(value) }}%</strong>
-                          </template></v-progress-linear
-                        >
-                      </v-list-item>
+                    </v-text-field>
+                  </v-form>
 
-                      <!-- ITEM CARD -->
-
-                      <draggable
-                        class="kanban-column"
-                        :list="list.items"
-                        group="tasks"
-                        :move="checkMove"
-                      >
-                        <v-list-item v-for="item in list.items" :key="item._id">
-                          <v-checkbox
-                            color="success"
-                            :label="item.title"
-                            :value="item._id"
-                          ></v-checkbox>
-                        </v-list-item>
-                      </draggable>
-                      <v-list-item>
-                        <v-btn
-                          block
-                          color="primary"
-                          v-if="newElement[0] != list.list._id"
-                          @click="openNewElementField(list.list._id)"
-                        >
-                          <v-icon>mdi-plus</v-icon> Ustvari element
-                        </v-btn>
-                        <div
-                          style="width: 100%"
-                          v-if="newElement[0] == list.list._id"
-                        >
-                          <v-textarea
-                            solo
-                            rows="1"
-                            auto-grow
-                            placeholder="Vnesi ime novega elementa"
-                            v-model="item_name"
-                          >
-                          </v-textarea>
-
-                          <v-btn
-                            class="mr-2"
-                            color="success"
-                            @click="createItem(list.list._id)"
-                          >
-                            Ustvari
-                          </v-btn>
-                          <v-btn
-                            icon
-                            color="danger"
-                            @click="newElement = false"
-                          >
-                            <v-icon>mdi-close-circle</v-icon>
-                          </v-btn>
-                        </div>
-                      </v-list-item>
-                    </v-list>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-              <v-col class="col-3 my-4 mx-4">
-                <v-card>
-                  <v-card-text>
-                    <v-btn block v-if="!newList" @click="newList = true"
-                      ><v-icon>mdi-plus</v-icon>Ustvari stolpec</v-btn
-                    >
-                    <div v-if="newList">
-                      <v-form>
-                        <v-text-field
-                          class="mx-2"
-                          placeholder="Vnesi ime nove vrstice"
-                          max="60"
-                          dense
-                          solo
-                          name="list_name"
-                          v-model="list_name"
-                        >
-                        </v-text-field>
-                      </v-form>
-
-                      <v-btn class="mx-2" color="success" @click="createList()">
-                        Ustvari
-                      </v-btn>
-                      <v-btn icon color="danger" @click="newList = false">
-                        <v-icon>mdi-close-circle</v-icon>
-                      </v-btn>
-                    </div>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
-            <v-row v-else>
-              <v-col class="col-3 my-4 mx-4">
-                <v-card>
-                  <v-card-text>
-                    <v-btn block v-if="!newList" @click="newList = true"
-                      ><v-icon>mdi-plus</v-icon>Ustvari stolpec</v-btn
-                    >
-                    <div v-if="newList">
-                      <v-form>
-                        <v-text-field
-                          class="mx-2"
-                          dense
-                          solo
-                          name="list_name"
-                          v-model="list_name"
-                        >
-                        </v-text-field>
-                      </v-form>
-
-                      <v-btn class="mx-2" color="success" @click="createList()">
-                        Ustvari
-                      </v-btn>
-                      <v-btn icon color="danger" @click="newList = false">
-                        <v-icon>mdi-close-circle</v-icon>
-                      </v-btn>
-                    </div>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
+                  <v-btn class="mx-2" color="success" @click="createList()">
+                    Ustvari
+                  </v-btn>
+                  <v-btn icon color="danger" @click="newList = false">
+                    <v-icon>mdi-close-circle</v-icon>
+                  </v-btn>
+                </div>
+              </v-card-text>
+            </v-card>
           </div>
+       
         </v-card>
       </v-flex>
     </v-layout>
@@ -275,13 +126,17 @@
 </template>
 
 <script>
+//Components
+import ListCard from "@/components/Projects/List-Card-Component";
+//Services
 import ProjectService from "@/services/ProjectService";
 import ItemService from "@/services/ItemService";
-import draggable from "vuedraggable";
+//Libraries
 
 export default {
   components: {
-    draggable,
+
+    ListCard,
   },
   data: () => ({
     project: null,
@@ -351,7 +206,6 @@ export default {
         );
 
         if (response) {
-          console.log(response.data.items);
           this.lists = response.data.items;
         }
       } catch (err) {
@@ -361,7 +215,6 @@ export default {
     async createList() {
       try {
         const id = this.$route.params.id;
-        console.log(this.list_name);
         const response = await ItemService.postList(
           this.list_name,
           id,
@@ -414,27 +267,42 @@ export default {
       this.newElement = [];
       this.newElement.push(listId);
     },
-    async checkMove(evt) {
-      console.log(evt.relatedContext.list);
-      const newListId = evt.relatedContext.element.parentItem
-      const itemId = evt.draggedContext.element._id
+    // async moveItems(listId, items) {
+    //   console.log("New list id: " + listId);
+    //   console.log("Updated list items: " + items);
+    //   // const newListId = listId;
+    //   // const itemId = evt.draggedContext.element._id;
 
-      // const listId = evt.draggedContext.element.parentItem
-      const response = await ItemService.updateListItems(
-        itemId,
-        newListId,
-        this.$store.state.token
-      );
-      console.log(response)
+    //   // // const listId = evt.draggedContext.element.parentItem
+    //   // const response = await ItemService.updateListItems(
+    //   //   itemId,
+    //   //   newListId,
+    //   //   this.$store.state.token
+    //   // );
+    //   // if (response) {
+    //   //   this.loadLists();
+    //   // }
+    // },
+    end(evt, list) {
+      console.log(list);
+      console.log(evt);
+
+      //  console.log(itemId)
+      //  console.log("ListId: " + listId);
+      // this.moveItems(list.list._id);
     },
-    log(el) {
-      console.log(el);
+    log(evt) {
+      console.log(evt);
     },
   },
 };
 </script>
 
 <style>
+.list-container {
+  overflow-x: scroll;
+  min-height: 1000px;
+}
 .kanban-column {
   min-height: 300px;
 }

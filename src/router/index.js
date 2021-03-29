@@ -6,6 +6,7 @@ import Login from '@/views/Login'
 import Register from '@/views/Register'
 import ProjectCreate from '@/views/projects/Create'
 import ProjectView from '@/views/projects/View'
+import ProjectStats from '@/views/projects/Statistics'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -44,6 +45,14 @@ const routes = [{
     path: '/projects/:id',
     name: 'project-single',
     component: ProjectView,
+    meta: {
+      onlyAuthUser: true
+    }
+  },
+  {
+    path: '/projects/:id/stats',
+    name: 'project-single-stats',
+    component: ProjectStats,
     meta: {
       onlyAuthUser: true
     }
