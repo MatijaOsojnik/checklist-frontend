@@ -83,7 +83,7 @@ export default {
           password: this.password,
         });
 
-        console.log(response)
+        console.log(response);
 
         if (response.data.token) {
           this.showPanel = true;
@@ -94,14 +94,18 @@ export default {
 
           const decoded = jwtDecode(response.data.token);
 
-          setTimeout(() => {
-            this.$store.dispatch("setToken", response.data.token);
-            this.$store.dispatch("setUser", decoded);
+          if (decoded) {
+            setTimeout(() => {
+              this.$store.dispatch("setToken", response.data.token);
+              this.$store.dispatch("setUser", decoded);
 
-            this.loginSuccess = false;
-            this.showPanel = false;
-            this.$router.push({ name: "home" });
-          }, 2500);
+              this.loginSuccess = false;
+              this.showPanel = false;
+              if (response.data.token) {
+                this.$router.push({ path: "/" });
+              }
+            }, 2500);
+          }
         } else {
           console.log("no response");
         }
