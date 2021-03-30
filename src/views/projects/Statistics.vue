@@ -4,7 +4,8 @@
       <v-flex xs12 justify="center" align="center">
         <v-card class="mx-auto" v-if="project">
           <v-toolbar flat color="#617BE3" dark>
-            <v-toolbar-title>{{ project.title }}</v-toolbar-title>
+            <v-btn @click="$router.go(-1)" icon><v-icon>mdi-arrow-left</v-icon></v-btn> 
+            <v-toolbar-title> {{ project.title }}</v-toolbar-title>
           </v-toolbar>
           <v-row class="mx-2" v-if="lists">
             <v-col>

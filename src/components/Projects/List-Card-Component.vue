@@ -2,7 +2,6 @@
   <v-card min-width="400px" height="auto" class="my-4 mx-5" :key="list._id">
     <v-card-title>
       {{ list.list.title }}
-      {{ list.list._id }}
       <v-spacer></v-spacer>
 
       <v-menu
@@ -34,7 +33,7 @@
       <v-list flat>
         <v-list-item v-if="list.items.length > 0">
           <v-progress-linear
-            :value="100 / list.items.length"
+            :value="0"
             color="success"
             height="25"
           >
