@@ -1,7 +1,7 @@
 import axios from 'axios'
 let baseurl = ''
 if(process.env.NODE_ENV === 'production'){
-    baseurl = 'https://checkyapi.herokuapp.com/api'
+    baseurl = 'https://checky-backend.herokuapp.com/api'
 }else {
     baseurl = 'http://localhost:5000/api'
 }
