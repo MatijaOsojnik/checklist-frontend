@@ -83,6 +83,8 @@ export default {
           password: this.password,
         });
 
+        console.log(response)
+
         if (response.data.token) {
           this.showPanel = true;
 

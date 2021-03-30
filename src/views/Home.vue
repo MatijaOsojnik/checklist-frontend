@@ -76,7 +76,7 @@
 // @ is an alias to /src
 import jwtDecode from "jwt-decode";
 import ProjectService from "@/services/ProjectService";
-import StatusService from "@/services/StatusService";
+// import StatusService from "@/services/StatusService";
 
 export default {
   name: "Home",
@@ -89,7 +89,7 @@ export default {
   mounted() {
     this.loadUser();
     this.loadProjects();
-    this.loadStatuses();
+    // this.loadStatuses();
   },
   methods: {
     loadUser() {
@@ -109,16 +109,16 @@ export default {
         console.log(err);
       }
     },
-    async loadStatuses() {
-      try {
-        const response = await StatusService.index(this.$store.state.token);
-        if (response) {
-          this.$store.dispatch("setStatuses", response.data.statuses)
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    }
+    // async loadStatuses() {
+    //   try {
+    //     const response = await StatusService.index(this.$store.state.token);
+    //     if (response) {
+    //       this.$store.dispatch("setStatuses", response.data.statuses)
+    //     }
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // }
   },
 };
 </script>
