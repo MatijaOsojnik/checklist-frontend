@@ -144,6 +144,14 @@ export default {
         console.log(err);
       }
     },
+    // async checkItem() {
+    //   id = this.list.list._id
+    //   const response = await ItemService.checkItem(
+    //     id,
+    //     this.$store.state.token
+    //   );
+ 
+    // },
     openNewElementField(listId) {
       this.newElement = [];
       this.newElement.push(listId);

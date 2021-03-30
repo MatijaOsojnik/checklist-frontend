@@ -9,7 +9,7 @@
         v-if="!loginSuccess"
       />
       <v-scroll-x-transition>
-        <v-alert type="success" v-if="loginSuccess">Login successful!</v-alert>
+        <v-alert type="success" v-if="loginSuccess">Uspešna prijava!</v-alert>
       </v-scroll-x-transition>
     </v-overlay>
     <v-row justify="center" align-content="center" style="height: 80vh">

@@ -125,11 +125,8 @@ export default {
       this.waitBeforeClick = true;
       try {
         const response = await ProjectService.post(this.project, this.$store.state.token);
-      console.log(response)
         if (response) {
-          this.successfulStoryPost = true;
           setTimeout(() => {
-            this.successfulStoryPost = false;
             this.waitBeforeClick = false;
             this.$router.push({
               path: "/",
