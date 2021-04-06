@@ -8,13 +8,8 @@
   >
   
 
-    <v-toolbar-title class="pa-2">
-      <!-- <router-link :to="{name: 'home'}" class="brand-black">
-        <v-img max-width="150px" class="pa-2" src="../../assets/checky.svg"></v-img>
-      </router-link> -->
-      <span class="d-block title pa-2">
-        {{ new Date().getCurrentDay() }}
-      </span>
+    <v-toolbar-title class="my-2">
+        <v-img max-width="150px" class="mt-2" src="../../assets/checky.svg"></v-img>
     </v-toolbar-title>
     <!-- <v-menu
       bottom

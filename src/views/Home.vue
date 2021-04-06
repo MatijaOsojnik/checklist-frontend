@@ -93,7 +93,7 @@ export default {
     async loadProjects() {
       try {
         const response = await ProjectService.index(this.$store.state.token);
-        if (response) {
+        if (response.data.items.length) {
           this.projects = response.data.items;
         }
       } catch (err) {

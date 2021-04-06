@@ -118,7 +118,7 @@ export default {
             // this.$store.dispatch("setAuthorities", response.data.authorities);
             this.registerSuccess = false;
             this.showPanel = false;
-            this.$router.push({ name: "login" });
+            this.$router.push({ name: "home" });
           }, 2500);
         }
       } catch (error) {
