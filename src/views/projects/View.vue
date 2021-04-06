@@ -92,13 +92,13 @@
             <v-card min-width="400px" height="100%" class="my-4 mx-5">
               <v-card-text>
                 <v-btn block v-if="!newList" @click="newList = true"
-                  ><v-icon>mdi-plus</v-icon>Ustvari stolpec</v-btn
+                  ><v-icon>mdi-plus</v-icon>Ustvari seznam</v-btn
                 >
                 <div v-if="newList">
                   <v-form>
                     <v-text-field
                       class="mx-2"
-                      placeholder="Vnesi ime nove vrstice"
+                      placeholder="Vnesi ime novega seznama"
                       max="60"
                       dense
                       solo

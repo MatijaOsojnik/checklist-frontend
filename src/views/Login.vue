@@ -92,7 +92,7 @@ export default {
 
           const decoded = jwtDecode(response.data.token);
 
-          if (decoded) {
+          if (decoded != null && decoded != undefined) {
             setTimeout(() => {
               this.$store.dispatch("setToken", response.data.token);
               this.$store.dispatch("setUser", decoded);
