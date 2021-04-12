@@ -4,6 +4,7 @@ import store from '@/store'
 import Home from '../views/Home'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
+import Verify from '@/views/Verify'
 import ProjectCreate from '@/views/projects/Create'
 import ProjectView from '@/views/projects/View'
 import ProjectStats from '@/views/projects/Statistics'
@@ -57,6 +58,14 @@ const routes = [{
       onlyAuthUser: true
     }
   },
+  {
+    path: '/verify/:verificationCode',
+    name: 'verify',
+    component: Verify,
+    meta: {
+      onlyGuestUser: true
+    }
+  },
   // {
   //   path: '/about',
   //   name: 'about',
@@ -67,7 +76,7 @@ const routes = [{
   // },
   {
     path: '*',
-    component: Home
+    component: Login
   }
 ]
 
@@ -98,6 +107,7 @@ router.beforeEach((to, from, next) => {
     }
   }
 })
+
 
 
 export default router

@@ -7,6 +7,9 @@ export default {
     login(credentials) {
         return axios.post('user/login', credentials)
     },
+    verify(authenticationCode) {
+        return axios.get(`user/verify/${authenticationCode}`)
+    }
     // googleAuth(user) {
     //     return axios.post('auth/google', user)
     // },
