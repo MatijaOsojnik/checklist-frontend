@@ -17,9 +17,9 @@
         <v-row justify="center" align-content="center" style="height: 80vh;">
     <v-col cols="8">
     <AuthenticationPanel
-      authenticationTypeText="Sign up"
+      authenticationTypeText="Registracija"
       route-name="login"
-      link-name="Sign in"
+      link-name="Prijava"
     >
       <v-scroll-x-transition>
         <v-alert elevation="2" type="warning" v-if="errors">
@@ -65,7 +65,7 @@
         class="submit-btn"
         max-width="60%"
         @click="register"
-        >Register</v-btn
+        >Registriraj se</v-btn
       >
     </AuthenticationPanel>
     </v-col>

@@ -7,10 +7,10 @@
             </div>
             <v-container class="form-input-container">
               <v-container>
-                <slot>No content defined.</slot>
+                <slot>Napaka pri nalaganju strani.</slot>
                 <div class="sign-in-container" v-if="$router.history.current['path'] === '/login' || $router.history.current['path'] === '/register'">
                   <span class="sign-in-text">
-                    Don't have an account yet?
+                    Še nimaš računa?
                     <span>
                       <router-link class="sign-in-link" :to="{name: `${routeName}`}">{{linkName}}</router-link>
                     </span>
