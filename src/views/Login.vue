@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-overlay v-if="showPanel" absolute z-index="999" :opacity="0.1">
+    <!-- <v-overlay v-if="showPanel" absolute z-index="999" :opacity="0.1">
       <v-progress-circular
         indeterminate
         color="green"
@@ -11,13 +11,13 @@
       <v-scroll-x-transition>
         <v-alert type="success" v-if="loginSuccess">Uspešna prijava!</v-alert>
       </v-scroll-x-transition>
-    </v-overlay>
+    </v-overlay> -->
     <v-row justify="center" align-content="center" style="height: 80vh">
       <v-col class="col-8">
         <AuthenticationPanel
-          authenticationTypeText="Login"
+          authenticationTypeText="Prijava"
           route-name="register"
-          link-name="Sign up"
+          link-name="Registracija"
         >
           <v-scroll-x-transition>
             <v-alert type="warning" elevation="2" v-if="error">
@@ -27,14 +27,14 @@
           <form @submit.prevent="handleSubmit">
             <div>
               <v-text-field
-                label="E-mail"
+                label="E-pošta"
                 v-model="email"
                 prepend-inner-icon="mdi-email-outline"
               />
             </div>
             <div>
               <v-text-field
-                label="Password"
+                label="Geslo"
                 v-model="password"
                 prepend-inner-icon="mdi-lock-outline"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -48,7 +48,7 @@
             class="submit-btn"
             max-width="60%"
             @click="login"
-            >Login</v-btn
+            >Prijavi se</v-btn
           >
         </AuthenticationPanel>
       </v-col>

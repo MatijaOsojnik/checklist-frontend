@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <v-overlay v-if="showPanel" absolute z-index="999" :opacity="0.1">
+    <v-overlay v-if="showPanel" absolute z-index="999" :opacity="0.1">
       <v-progress-circular
         indeterminate
         color="green"
@@ -13,66 +13,63 @@
           >Registration successful!</v-alert
         >
       </v-scroll-x-transition>
-    </v-overlay> -->
-    <v-row justify="center" align-content="center" style="height: 80vh">
-      <v-col cols="8">
-        <AuthenticationPanel
-          authenticationTypeText="Sign up"
-          route-name="login"
-          link-name="Sign in"
-        >
-          <v-scroll-x-transition>
-            <v-alert elevation="2" type="warning" v-if="errors">
-              <ul>
-                <li v-for="error in errors" :key="error">{{ error.msg }}</li>
-              </ul>
-            </v-alert>
-            <v-alert elevation="2" type="warning" v-if="registerSuccess">
-              <p>Na vaš e-poštni naslov ste prejeli potrdilno povezavo. Za dostop do aplikacije kliknite na povezavo.</p>
-            </v-alert>
-          </v-scroll-x-transition>
-          <form @submit.prevent="handleSubmit" autocomplete="off">
-            <div>
-              <v-text-field
-                label="Name"
-                v-model="name"
-                prepend-inner-icon="mdi-account-outline"
-              />
-            </div>
-            <div>
-              <v-text-field
-                label="Surname"
-                v-model="surname"
-                prepend-inner-icon="mdi-account-outline"
-              />
-            </div>
-            <div>
-              <v-text-field
-                label="E-mail"
-                v-model="email"
-                prepend-inner-icon="mdi-email-outline"
-              />
-            </div>
-            <div>
-              <v-text-field
-                type="password"
-                autocomplete="new-password"
-                label="Password"
-                v-model="password"
-                prepend-inner-icon="mdi-lock-outline"
-              />
-            </div>
-          </form>
-          <v-btn
-            color="primary"
-            class="submit-btn"
-            max-width="60%"
-            @click="register"
-            >Register</v-btn
-          >
-        </AuthenticationPanel>
-      </v-col>
-    </v-row>
+    </v-overlay>
+        <v-row justify="center" align-content="center" style="height: 80vh;">
+    <v-col cols="8">
+    <AuthenticationPanel
+      authenticationTypeText="Registracija"
+      route-name="login"
+      link-name="Prijava"
+    >
+      <v-scroll-x-transition>
+        <v-alert elevation="2" type="warning" v-if="errors">
+          <ul>
+            <li v-for="error in errors" :key="error">{{error.msg}}</li>
+          </ul>
+        </v-alert>
+      </v-scroll-x-transition>
+      <form @submit.prevent="handleSubmit" autocomplete="off">
+        <div>
+          <v-text-field
+            label="Ime"
+            v-model="name"
+            prepend-inner-icon="mdi-account-outline"
+          />
+        </div>
+        <div>
+          <v-text-field
+            label="Priimek"
+            v-model="surname"
+            prepend-inner-icon="mdi-account-outline"
+          />
+        </div>
+        <div>
+          <v-text-field
+            label="E-pošta"
+            v-model="email"
+            prepend-inner-icon="mdi-email-outline"
+          />
+        </div>
+        <div>
+          <v-text-field
+            type="password"
+            autocomplete="new-password"
+            label="Geslo"
+            v-model="password"
+            prepend-inner-icon="mdi-lock-outline"
+          />
+        </div>
+      </form>
+      <v-btn
+        color="primary"
+        class="submit-btn"
+        max-width="60%"
+        @click="register"
+        >Registriraj se</v-btn
+      >
+    </AuthenticationPanel>
+    </v-col>
+        </v-row>
   </div>
 </template>
 
@@ -86,6 +83,8 @@ export default {
   data: () => ({
     name: "",
     surname: "",
+    company_id: 1,
+    user_role_id: 1,
     email: "",
     password: "",
     registerSuccess: false,
@@ -109,21 +108,21 @@ export default {
         if (response.data.token) {
           this.showPanel = true;
 
-          // setTimeout(() => {
-          //   this.registerSuccess = true;
-          // }, 1500);
+          setTimeout(() => {
+            this.registerSuccess = true;
+          }, 1500);
 
-          // setTimeout(() => {
-          //   // this.$store.dispatch("setToken", response.data.token);
-          //   // this.$store.dispatch("setUser", response.data.user);
-          //   // this.$store.dispatch("setAuthorities", response.data.authorities);
-             this.registerSuccess = true;
-          //   this.showPanel = false;
-          //   this.$router.push({ name: "login"});
-          // }, 2500);
+          setTimeout(() => {
+            this.$store.dispatch("setToken", response.data.token);
+            // this.$store.dispatch("setUser", response.data.user);
+            // this.$store.dispatch("setAuthorities", response.data.authorities);
+            this.registerSuccess = false;
+            this.showPanel = false;
+            this.$router.push({ name: "home" });
+          }, 2500);
         }
       } catch (error) {
-        console.log(error.response.data.errors);
+        console.log(error.response.data.errors)
         this.errors = error.response.data.errors;
         setTimeout(() => (this.errors = null), 10000);
       }
