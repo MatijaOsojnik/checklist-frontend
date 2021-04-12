@@ -6,8 +6,23 @@
           <v-toolbar flat color="#617BE3" dark>
             <v-toolbar-title>{{ project.title }}</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn color="dark" :to="{path: `/projects/${project._id}/stats`}">Statistika</v-btn>
+            <v-btn color="dark" :to="{ path: `/projects/${project._id}/stats` }"
+              >Statistika</v-btn
+            >
           </v-toolbar>
+
+          <div>
+            <v-checkbox v-model="inviteLink" class="mx-4" label="Povezava za povabilo"></v-checkbox>
+            <v-banner v-model="inviteLink" single-line transition="slide-y-transition">
+              <span class="font-weight-bold">
+                https://checky-app.herokuapp.com/projects/invite/{{inviteUrl}}
+              </span>
+              
+              <template v-slot:actions="{ dismiss }">
+                <v-btn text color="primary" @click="dismiss"> Skrij </v-btn>
+              </template>
+            </v-banner>
+          </div>
           <!-- <v-row class="mx-2" v-if="lists">
             <v-col>
               <v-card class="mt-4 mx-auto py-2">
@@ -118,7 +133,6 @@
               </v-card-text>
             </v-card>
           </div>
-       
         </v-card>
       </v-flex>
     </v-layout>
@@ -135,7 +149,6 @@ import ItemService from "@/services/ItemService";
 
 export default {
   components: {
-
     ListCard,
   },
   data: () => ({
@@ -145,22 +158,11 @@ export default {
     modal: false,
     newList: false,
     newElement: [],
-
+    inviteLink: false,
+    inviteUrl: null,
     lists: null,
     list_name: "",
     item_name: "",
-    type: "trend",
-    value: [200, 675, 410, 390, 310, 460, 250, 240],
-    labels: [
-      "24:00",
-      "3:00",
-      "06:00",
-      "09:00",
-      "12:00",
-      "15:00",
-      "18:00",
-      "21:00",
-    ],
   }),
   mounted() {
     this.loadProject();
@@ -192,6 +194,7 @@ export default {
         );
         if (response) {
           this.project = response.data.item;
+          this.inviteUrl = response.data.inviteLink
         }
       } catch (err) {
         setTimeout(() => (this.errors = []), 5000);

@@ -28,6 +28,13 @@ export default {
             }
         })
     },
+    invite(invite, token) {
+        return axios.get(`project/invite/${invite}`, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
+    },
     delete(id, token) {
         return axios.delete('project', id, {
             headers: {

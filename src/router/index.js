@@ -8,6 +8,7 @@ import Verify from '@/views/Verify'
 import ProjectCreate from '@/views/projects/Create'
 import ProjectView from '@/views/projects/View'
 import ProjectStats from '@/views/projects/Statistics'
+import Invite from '@/views/projects/Invite'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -30,6 +31,14 @@ const routes = [{
     path: '/register',
     name: 'register',
     component: Register,
+    meta: {
+      onlyGuestUser: true
+    }
+  },
+  {
+    path: '/verify/:verificationCode',
+    name: 'verify',
+    component: Verify,
     meta: {
       onlyGuestUser: true
     }
@@ -59,11 +68,11 @@ const routes = [{
     }
   },
   {
-    path: '/verify/:verificationCode',
-    name: 'verify',
-    component: Verify,
+    path: '/projects/invite/:inviteCode',
+    name: 'invite',
+    component: Invite,
     meta: {
-      onlyGuestUser: true
+      onlyAuthUser: true
     }
   },
   // {

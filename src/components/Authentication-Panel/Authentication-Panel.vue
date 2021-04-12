@@ -63,7 +63,7 @@ li {
 .form-input-container {
   display: flex;
   justify-content: center;
-  width: 60%;
+  width: 65%;
 }
 .brand {
   color: black;
