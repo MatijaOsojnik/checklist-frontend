@@ -8,7 +8,7 @@
       v-if="$store.state.token"
     >
       <div>
-        <v-list-item class="px-2">
+        <v-list-item class="px-2" v-if="user">
           <v-list-item-avatar>
             <v-img
               src="https://randomuser.me/api/portraits/women/85.jpg"

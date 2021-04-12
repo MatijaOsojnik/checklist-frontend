@@ -3,10 +3,15 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
-
+import moment from 'moment'
+import 'moment/locale/sl'
 import VueTimeago from 'vue-timeago'
 
 Vue.config.productionTip = false
+
+moment.locale('sl')
+
+Vue.prototype.moment = moment
 
 Vue.use(VueTimeago, {
   name: 'Timeago', // Component name, `Timeago` by default

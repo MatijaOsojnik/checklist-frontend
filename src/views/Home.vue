@@ -2,8 +2,7 @@
   <v-container fluid class="home">
     <v-card elevation="2">
       <v-card-title>
-        <p v-if="user">HI {{ user.name }} {{ user.surname }}!</p>
-        <p v-else>You should first log in!</p>
+        <p class="card-title">{{moment().format('dddd')}}</p>
       </v-card-title>
     </v-card>
     <div v-if="$store.state.isUserLoggedIn">
@@ -100,7 +99,7 @@ export default {
         console.log(err);
       }
     },
-    loadUser() {
+    async loadUser() {
       if (this.$store.state.token) {
         const token = this.$store.state.token;
         this.user = jwtDecode(token);
@@ -128,5 +127,6 @@ export default {
 .card-title {
   font-size: 23px;
   font-weight: 600;
+  text-transform: capitalize;
 }
 </style>

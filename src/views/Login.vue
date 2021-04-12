@@ -92,16 +92,15 @@ export default {
                 if (response.data.token) {
                 this.$store.dispatch("setToken", response.data.token);
                 this.$store.dispatch("setUser", decoded);
-                  this.$router.push({ path: "/" });
+                  this.$router.push({ name: "home" });
                 }
               } else {
                 this.error = "Za prijavo v aplikacijo, vas prosimo, da potrdite svoj račun.";
               }
           }
-        } else {
-          console.log("no response");
         }
       } catch (error) {
+        console.log(error)
         this.error = error.response.data.message;
         setTimeout(() => (this.error = null), 5000);
       }
