@@ -31,21 +31,21 @@
       <form @submit.prevent="handleSubmit" autocomplete="off">
         <div>
           <v-text-field
-            label="Name"
+            label="Ime"
             v-model="name"
             prepend-inner-icon="mdi-account-outline"
           />
         </div>
         <div>
           <v-text-field
-            label="Surname"
+            label="Priimek"
             v-model="surname"
             prepend-inner-icon="mdi-account-outline"
           />
         </div>
         <div>
           <v-text-field
-            label="E-mail"
+            label="E-pošta"
             v-model="email"
             prepend-inner-icon="mdi-email-outline"
           />
@@ -54,7 +54,7 @@
           <v-text-field
             type="password"
             autocomplete="new-password"
-            label="Password"
+            label="Geslo"
             v-model="password"
             prepend-inner-icon="mdi-lock-outline"
           />

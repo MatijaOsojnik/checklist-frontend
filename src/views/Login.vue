@@ -27,14 +27,14 @@
           <form @submit.prevent="handleSubmit">
             <div>
               <v-text-field
-                label="E-mail"
+                label="E-pošta"
                 v-model="email"
                 prepend-inner-icon="mdi-email-outline"
               />
             </div>
             <div>
               <v-text-field
-                label="Password"
+                label="Geslo"
                 v-model="password"
                 prepend-inner-icon="mdi-lock-outline"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -84,25 +84,19 @@ export default {
         });
 
         if (response.data.token) {
-          this.showPanel = true;
-
-          setTimeout(() => {
-            this.loginSuccess = true;
-          }, 1500);
-
           const decoded = jwtDecode(response.data.token);
 
-          if (decoded != null && decoded != undefined) {
-            setTimeout(() => {
-              this.$store.dispatch("setToken", response.data.token);
-              this.$store.dispatch("setUser", decoded);
-
-              this.loginSuccess = false;
-              this.showPanel = false;
-              if (response.data.token) {
-                this.$router.push({ path: "/" });
+          if (decoded != null && decoded != undefined) {   
+            console.log(decoded)       
+              if (decoded.active) {
+                if (response.data.token) {
+                this.$store.dispatch("setToken", response.data.token);
+                this.$store.dispatch("setUser", decoded);
+                  this.$router.push({ path: "/" });
+                }
+              } else {
+                this.error = "Za prijavo v aplikacijo, vas prosimo, da potrdite svoj račun.";
               }
-            }, 2500);
           }
         } else {
           console.log("no response");
