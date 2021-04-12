@@ -11,7 +11,7 @@
         <v-list-item class="px-2" v-if="user">
           <v-list-item-avatar>
             <v-img
-              src="https://randomuser.me/api/portraits/women/85.jpg"
+              src="./assets/luke-chesser-pJadQetzTkI-unsplash.jpg"
             ></v-img>
           </v-list-item-avatar>
           <v-list-item-title
@@ -59,6 +59,7 @@
 import Footer from "@/components/Footer";
 import UserHeader from "@/components/Header/User-Header";
 import Header from "@/components/Header/Header";
+import jwtDecode from "jwt-decode";
 export default {
   name: "App",
 
@@ -81,6 +82,15 @@ export default {
   created() {
     this.user = this.$store.state.user;
   },
+  methods: {
+      async loadUser() {
+      if (this.$store.state.token) {
+        const token = this.$store.state.token;
+        this.user = jwtDecode(token);
+        this.$store.dispatch("setUser", this.user);
+      }
+    },
+  }
 };
 </script>
 

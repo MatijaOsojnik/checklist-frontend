@@ -86,8 +86,7 @@ export default {
         if (response.data.token) {
           const decoded = jwtDecode(response.data.token);
 
-          if (decoded != null && decoded != undefined) {   
-            console.log(decoded)       
+          if (decoded != null && decoded != undefined) {         
               if (decoded.active) {
                 if (response.data.token) {
                 this.$store.dispatch("setToken", response.data.token);
@@ -100,8 +99,8 @@ export default {
           }
         }
       } catch (error) {
-        console.log(error)
-        this.error = error.response.data.message;
+        console.log(error.response.data)
+        this.error = 'E-poštni naslov in geslo se ne ujemata.';
         setTimeout(() => (this.error = null), 5000);
       }
     },
