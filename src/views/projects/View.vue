@@ -9,15 +9,96 @@
             <v-btn color="dark" :to="{ path: `/projects/${project._id}/stats` }"
               >Statistika</v-btn
             >
+            <v-menu bottom offset-y transition="scroll-y-transition">
+              <template v-slot:activator="{ on }">
+                <v-btn color="black" v-on="on" icon>
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-card max-width="200px">
+                <v-container fluid>
+                  <div
+                    class="d-flex justify-center align-center flex-column ma-3"
+                  >
+                    <v-btn class="py-2" depressed text block> Uredi </v-btn>
+                    <v-btn
+                      depressed
+                      text
+                      block
+                      @click="deleteProject(project._id)"
+                      v-if="$store.state.user.id == project.owner"
+                    >
+                      Izbriši
+                    </v-btn>
+                    <v-dialog v-model="dialog" width="500">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          class="py-2"
+                          depressed
+                          text
+                          block
+                          v-bind="attrs"
+                          v-on="on"
+                        >
+                          Povabi člana
+                        </v-btn>
+                      </template>
+
+                      <v-card>
+                        <v-card-title class="headline grey lighten-2">
+                          Povabi člana
+                        </v-card-title>
+
+                        <v-card-text>
+                          <v-combobox
+                            label="E-pošta"
+                            v-model="emailSelect"
+                            prepend-inner-icon="mdi-email-outline"
+                            hint="Povabilo lahko pošljete več ljudem naenkrat."
+                            multiple
+                            chips
+                          >
+                          </v-combobox>
+                          <v-btn
+                            block
+                            color="primary"
+                            @click="inviteMembers(project._id)"
+                          >
+                            Pošlji
+                          </v-btn>
+                        </v-card-text>
+
+                        <v-divider></v-divider>
+
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn color="primary" text @click="dialog = false">
+                            Zapri
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </div>
+                </v-container>
+              </v-card>
+            </v-menu>
           </v-toolbar>
 
           <div>
-            <v-checkbox v-model="inviteLink" class="mx-4" label="Povezava za povabilo"></v-checkbox>
-            <v-banner v-model="inviteLink" single-line transition="slide-y-transition">
+            <v-checkbox
+              v-model="inviteLink"
+              class="mx-4"
+              label="Povezava za povabilo"
+            ></v-checkbox>
+            <v-banner
+              v-model="inviteLink"
+              single-line
+              transition="slide-y-transition"
+            >
               <span class="font-weight-bold">
-                https://checky-app.herokuapp.com/projects/invite/{{inviteUrl}}
+                https://checky-app.herokuapp.com/projects/invite/{{ inviteUrl }}
               </span>
-              
+
               <template v-slot:actions="{ dismiss }">
                 <v-btn text color="primary" @click="dismiss"> Skrij </v-btn>
               </template>
@@ -163,6 +244,8 @@ export default {
     lists: null,
     list_name: "",
     item_name: "",
+    dialog: false,
+    emailSelect: [],
   }),
   mounted() {
     this.loadProject();
@@ -194,7 +277,7 @@ export default {
         );
         if (response) {
           this.project = response.data.item;
-          this.inviteUrl = response.data.inviteLink
+          this.inviteUrl = response.data.inviteLink;
         }
       } catch (err) {
         setTimeout(() => (this.errors = []), 5000);
@@ -270,32 +353,32 @@ export default {
       this.newElement = [];
       this.newElement.push(listId);
     },
-    // async moveItems(listId, items) {
-    //   console.log("New list id: " + listId);
-    //   console.log("Updated list items: " + items);
-    //   // const newListId = listId;
-    //   // const itemId = evt.draggedContext.element._id;
-
-    //   // // const listId = evt.draggedContext.element.parentItem
-    //   // const response = await ItemService.updateListItems(
-    //   //   itemId,
-    //   //   newListId,
-    //   //   this.$store.state.token
-    //   // );
-    //   // if (response) {
-    //   //   this.loadLists();
-    //   // }
-    // },
-    end(evt, list) {
-      console.log(list);
-      console.log(evt);
-
-      //  console.log(itemId)
-      //  console.log("ListId: " + listId);
-      // this.moveItems(list.list._id);
+    async deleteProject(projectId) {
+      try {
+        const id = projectId;
+        const response = await ProjectService.delete(
+          id,
+          this.$store.state.token
+        );
+        if (response) {
+          this.$router.push({ name: "home" });
+        }
+      } catch (err) {
+        console.log(err);
+      }
     },
-    log(evt) {
-      console.log(evt);
+    async inviteMembers(projectId) {
+      try {
+        const id = projectId;
+        const response = await ProjectService.multipleInvite(
+          id,
+          this.emailSelect,
+          this.$store.state.token
+        );
+        console.log(response)
+      } catch (error) {
+        console.log(error.response.data);
+      }
     },
   },
 };

@@ -126,12 +126,10 @@ export default {
       try {
         const response = await ProjectService.post(this.project, this.$store.state.token);
         if (response) {
-          setTimeout(() => {
             this.waitBeforeClick = false;
             this.$router.push({
               path: "/",
             });
-          }, 3000);
         }
       } catch (err) {
         console.log(err);

@@ -35,8 +35,18 @@ export default {
             }
         })
     },
+    multipleInvite(projectId, emails, token) {
+        return axios.post(`project/invite`, {
+            emails: emails,
+            projectId: projectId
+        }, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
+    },
     delete(id, token) {
-        return axios.delete('project', id, {
+        return axios.delete(`project/${id}`, {
             headers: {
                 Authorization: 'Bearer ' + token,
             }
