@@ -50,6 +50,12 @@
                         </v-card-title>
 
                         <v-card-text>
+                          <v-alert type="error" v-if="error">
+                            <span>{{ error }}</span>
+                          </v-alert>
+                          <v-alert type="message" v-if="message">
+                            <span>{{ message }}</span>
+                          </v-alert>
                           <v-combobox
                             label="E-pošta"
                             v-model="emailSelect"
@@ -234,7 +240,8 @@ export default {
   },
   data: () => ({
     project: null,
-    errors: [],
+    error: null,
+    message: null,
     menu: false,
     modal: false,
     newList: false,
@@ -370,15 +377,35 @@ export default {
     async inviteMembers(projectId) {
       try {
         const id = projectId;
-        const response = await ProjectService.multipleInvite(
-          id,
-          this.emailSelect,
-          this.$store.state.token
-        );
-        console.log(response)
+        const validEmails = [];
+        if (this.emailSelect.length > 0) {
+          this.emailSelect.forEach((email) => {
+            if (this.validateEmail(email)) {
+              validEmails.push(email);
+            }
+          });
+          if (validEmails.length > 0) {
+            const response = await ProjectService.multipleInvite(
+              id,
+              validEmails,
+              this.$store.state.token
+            );
+            if (response) {
+              this.message = "Povabilo je bilo uspešno poslano.";
+            }
+          } else {
+            this.error = "Napaka. Podan e-poštni naslov je napačen";
+          }
+        } else {
+          this.error = "Napaka. Povabiti moraš vsaj enega člana.";
+        }
       } catch (error) {
         console.log(error.response.data);
       }
+    },
+    validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+$/;
+      return re.test(email);
     },
   },
 };
