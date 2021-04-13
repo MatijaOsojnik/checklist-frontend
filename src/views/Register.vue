@@ -29,7 +29,7 @@
             </v-alert>
           </v-scroll-x-transition>
           <v-alert type="success" v-if="registerSuccess">
-            <p>Za dostop do aplikacije morate še aktivariti svoj račun. Na e-poštni naslov smo vam poslali aktivacijsko povezavo.</p>
+            <span>Za dostop do aplikacije morate še aktivariti svoj račun. Na e-poštni naslov smo vam poslali aktivacijsko povezavo.</span>
           </v-alert>
           <form @submit.prevent="handleSubmit" autocomplete="off">
             <div>
