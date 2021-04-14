@@ -21,7 +21,13 @@
         >
           <v-scroll-x-transition>
             <v-alert type="warning" elevation="2" v-if="error">
-              {{ error }}
+              <span>{{ error }}</span>
+              <div v-if="error = 'Za prijavo v aplikacijo, vas prosimo, da potrdite svoj račun.'">
+                <span >
+                  Niste prejeli e-poštnega sporočila?
+                </span>
+                <v-btn color="primary" @click="sendVerification()">Pošlji ponovno</v-btn>
+              </div>
             </v-alert>
           </v-scroll-x-transition>
           <form @submit.prevent="handleSubmit">
@@ -69,6 +75,7 @@ export default {
   data: () => ({
     email: "",
     password: "",
+    verifyEmail: null,
     loginSuccess: false,
     showPanel: false,
     showPassword: false,
@@ -83,27 +90,44 @@ export default {
           password: this.password,
         });
 
+        this.verifyEmail = this.email
+
         if (response.data.token) {
           const decoded = jwtDecode(response.data.token);
 
-          if (decoded != null && decoded != undefined) {         
-              if (decoded.active) {
-                if (response.data.token) {
+          if (decoded != null && decoded != undefined) {
+            if (decoded.active) {
+              if (response.data.token) {
                 this.$store.dispatch("setToken", response.data.token);
                 this.$store.dispatch("setUser", decoded);
-                  this.$router.push({ name: "home" });
-                }
-              } else {
-                this.error = "Za prijavo v aplikacijo, vas prosimo, da potrdite svoj račun.";
+                this.$router.push({ name: "home" });
               }
+            } else {
+              this.error =
+                "Za prijavo v aplikacijo, vas prosimo, da potrdite svoj račun.";
+            }
           }
         }
       } catch (error) {
-        console.log(error.response.data)
-        this.error = 'E-poštni naslov in geslo se ne ujemata.';
+        console.log(error.response.data);
+        this.error = "E-poštni naslov in geslo se ne ujemata.";
         setTimeout(() => (this.error = null), 5000);
       }
     },
+    async sendVerification() {
+      try {
+        if(this.verifyEmail) {
+          const response = await AuthenticationService.sendVerification(this.verifyEmail)
+          if(response) {
+            this.message = "Uspešno poslano novo sporočilo"
+            this.error = null
+          }
+        }
+      } catch (error) {
+        this.error = "Napaka. Poskusite ponovno kasneje";
+        setTimeout(() => (this.error = null), 5000);
+      }
+    }
   },
 };
 </script>
