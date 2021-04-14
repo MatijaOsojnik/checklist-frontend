@@ -152,10 +152,10 @@
               </router-link> -->
 
               <v-btn class="py-2" depressed text block :to="{ path: `/projects/create` }">
-                New Project
+                Nov projekt
               </v-btn>
               <v-btn class="" depressed text block @click="logout">
-                Log out
+                Izpis
               </v-btn>
             </div>
           </v-container>
