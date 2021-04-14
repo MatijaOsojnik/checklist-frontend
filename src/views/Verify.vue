@@ -28,10 +28,9 @@ export default {
   methods: {
     async verify() {
       try {
-        console.log("HEY");
         const code = this.$route.params.verificationCode;
         const response = await AuthenticationService.verify(code);
-        if (response.data) {
+        if (response) {
           this.message =
             "Uspešno ste potrdili vaš račun. Lahko se prijavite v aplikacijo.";
         }

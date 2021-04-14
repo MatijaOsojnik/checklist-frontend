@@ -11,7 +11,7 @@ export default {
         return axios.get(`user/verify/${authenticationCode}`)
     },
     sendVerification(email) {
-        return axios.post(`user/verify`, email)
+        return axios.post(`user/verify`, {email: email})
     }
     // googleAuth(user) {
     //     return axios.post('auth/google', user)
