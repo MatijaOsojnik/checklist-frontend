@@ -21,7 +21,7 @@
         <v-divider />
 
         <v-list expand nav>
-          <v-list-item v-for="item in items" :key="item.title" link>
+          <v-list-item v-for="item in items" :key="item.title" :to="{name: item.link}">
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -64,9 +64,9 @@ export default {
     user: null,
     drawer: true,
     items: [
-      { title: "Home", icon: "mdi-home-city" },
-      { title: "My Account", icon: "mdi-account" },
-      { title: "Users", icon: "mdi-account-group-outline" },
+      { title: "Projekti", icon: "mdi-folder-multiple", link: 'projects' },
+      { title: "Statistika", icon: "mdi-chart-line", link: 'user-view' },
+      { title: "Moj račun", icon: "mdi-account", link: 'admin-view' },
     ],
     mini: true,
   }),

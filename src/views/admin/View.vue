@@ -5,11 +5,11 @@
         <v-card class="mx-auto" v-if="project">
           <v-toolbar flat color="#617BE3" dark>
             <v-btn @click="$router.go(-1)" icon
-              ><v-icon>mdi-arrow-left</v-icon></v-btn
-            >
-            <v-toolbar-title> {{ project.title }}</v-toolbar-title>
+              ><v-icon>mdi-arrow-left</v-icon>
+            </v-btn>
+            <v-toolbar-title>Administrator</v-toolbar-title>
           </v-toolbar>
-          <v-row class="mx-2" v-if="lists">
+          <v-row class="mx-2" v-if="users">
             <v-col>
               <v-card class="mt-4 mx-auto py-2">
                 <v-card-text>
@@ -30,7 +30,7 @@
                 </v-card-text>
                 <v-card-text class="pt-0">
                   <div class="title font-weight-light mb-2">
-                    Število stolpcev
+                    Novi uporabniki
                   </div>
                   <div class="subheading font-weight-light grey--text">
                     Današnji dan
@@ -38,9 +38,9 @@
                   <v-divider class="my-2"></v-divider>
                   <v-icon class="mr-2" small> mdi-clock </v-icon>
                   <span class="caption grey--text font-weight-light"
-                    >Zadnji ustvarjen
+                    >Zadnji registriran
                     <timeago
-                      :datetime="lastListCreated"
+                      :datetime="lastRegistered"
                       :auto-update="60"
                     ></timeago>
                   </span>
@@ -66,7 +66,7 @@ export default {
     this.loadLists();
   },
   computed: {
-    lastListCreated() {
+    lastRegistered() {
       if (this.lists.length) {
         const length = this.lists.length;
         const last = this.lists[length - 1].list.dateAdd;
@@ -86,7 +86,6 @@ export default {
         );
         if (response) {
           this.project = response.data.item;
-          
         }
       } catch (err) {
         setTimeout(() => (this.errors = []), 5000);

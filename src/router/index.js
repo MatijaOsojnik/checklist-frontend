@@ -8,6 +8,8 @@ import Verify from '@/views/Verify'
 import ProjectCreate from '@/views/projects/Create'
 import ProjectView from '@/views/projects/View'
 import ProjectStats from '@/views/projects/Statistics'
+import AdminView from '@/views/admin/View'
+import UserView from '@/views/user/View'
 import Invite from '@/views/projects/Invite'
 Vue.use(VueRouter)
 
@@ -75,6 +77,23 @@ const routes = [{
       onlyAuthUser: true
     }
   },
+  {
+    path: '/admin',
+    name: 'admin-view',
+    component: AdminView,
+    meta: {
+      onlyAuthUser: true
+    }
+  },
+  {
+    path: '/stats',
+    name: 'user-view',
+    component: UserView,
+    meta: {
+      onlyAuthUser: true
+    }
+  },
+
   // {
   //   path: '/about',
   //   name: 'about',
