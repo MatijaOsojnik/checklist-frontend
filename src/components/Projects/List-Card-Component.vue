@@ -105,6 +105,9 @@ export default {
     newElement: [],
     item_name: "",
   }),
+  mounted() {
+
+  },
   props: {
     list: Object,
   },

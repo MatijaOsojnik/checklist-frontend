@@ -14,7 +14,7 @@ import Invite from '@/views/projects/Invite'
 Vue.use(VueRouter)
 
 const routes = [{
-    path: '/',
+    path: '/projects',
     name: 'home',
     component: Home,
     meta: {

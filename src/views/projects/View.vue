@@ -284,6 +284,15 @@ export default {
         );
         if (response) {
           this.project = response.data.item;
+          const projectItems = response.data.item.children.map(list => {
+            const allItems = {
+              list: list,
+              items: list.children
+            }
+            console.log(list)
+            return allItems
+          })
+          this.lists = projectItems
           this.inviteUrl = response.data.inviteLink;
         }
       } catch (err) {

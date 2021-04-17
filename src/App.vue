@@ -64,7 +64,7 @@ export default {
     user: null,
     drawer: true,
     items: [
-      { title: "Projekti", icon: "mdi-folder-multiple", link: 'projects' },
+      { title: "Projekti", icon: "mdi-folder-multiple", link: 'home' },
       { title: "Statistika", icon: "mdi-chart-line", link: 'user-view' },
       { title: "Moj račun", icon: "mdi-account", link: 'admin-view' },
     ],
