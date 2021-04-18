@@ -2,15 +2,75 @@
   <div>
     <v-layout>
       <v-flex xs12 justify="center" align="center">
-        <v-card class="mx-auto" v-if="project">
+        <v-card class="mx-auto">
           <v-toolbar flat color="#617BE3" dark>
-            <v-btn @click="$router.go(-1)" icon
+            <!-- <v-btn @click="$router.go(-1)" icon
               ><v-icon>mdi-arrow-left</v-icon>
-            </v-btn>
+            </v-btn> -->
             <v-toolbar-title>Administrator</v-toolbar-title>
           </v-toolbar>
-          <v-row class="mx-2" v-if="users">
-            <v-col>
+          <v-row class="mx-2">
+            <v-col v-if="users">
+              <v-card class="pa-2">
+                <span class="pa-4 d-block title">
+                  <v-icon large> mdi-account-circle </v-icon>
+                  Uporabniki
+                </span>
+                <v-card-title>
+                  <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Išči"
+                    single-line
+                    hide-details
+                  ></v-text-field>
+                </v-card-title>
+                <v-data-table
+                  :loading="loading"
+                  :headers="headers"
+                  :items="users"
+                  :search="search"
+                >
+                  <template v-slot:top>
+                    <v-dialog v-model="dialogDelete" max-width="500px">
+                      <v-card>
+                        <v-card-title class="headline"
+                          >Res želiš izbrisati tega uporabnika?</v-card-title
+                        >
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="dialogDelete = false"
+                            >Zapri</v-btn
+                          >
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="deleteUserConfirm"
+                            >OK</v-btn
+                          >
+                          <v-spacer></v-spacer>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </template>
+                  <template v-slot:item.active="{ item }">
+                    <v-simple-checkbox
+                      v-model="item.active"
+                      disabled
+                    ></v-simple-checkbox>
+                  </template>
+                  <template v-slot:item.actions="{ item }">
+                    <v-icon small @click="deleteUser(item)">
+                      mdi-delete
+                    </v-icon>
+                  </template>
+                </v-data-table>
+              </v-card>
+            </v-col>
+            <!-- <v-col>
               <v-card class="mt-4 mx-auto py-2">
                 <v-card-text>
                   <v-sheet color="rgba(0, 0, 0, .12)">
@@ -46,24 +106,45 @@
                   </span>
                 </v-card-text>
               </v-card>
-            </v-col>
-          </v-row> </v-card></v-flex
-    ></v-layout>
+            </v-col> -->
+          </v-row>
+        </v-card></v-flex
+      ></v-layout
+    >
   </div>
 </template>
 
 <script>
+import UserService from "@/services/UserService";
 import ProjectService from "@/services/ProjectService";
 import ItemService from "@/services/ItemService";
 export default {
   data: () => ({
+    loading: true,
+    search: "",
+    headers: [
+      {
+        text: "ID",
+        value: "_id",
+      },
+      { text: "Uporabniško ime", value: "username" },
+      { text: "E-pošta", value: "email" },
+      { text: "Potrjen račun", value: "active" },
+      { text: "Dejanja", value: "actions", sortable: false },
+    ],
+    users: null,
+    selectedUser: null,
     project: null,
     lists: null,
+    dialog: false,
+    dialogDelete: false,
     value: [423, 446, 675, 510, 590, 610, 760],
   }),
+
   mounted() {
     this.loadProject();
     this.loadLists();
+    this.loadUsers();
   },
   computed: {
     lastRegistered() {
@@ -77,6 +158,37 @@ export default {
     },
   },
   methods: {
+    async loadUsers() {
+      try {
+        const response = await UserService.allUserInfo(this.$store.state.token);
+        if (response) {
+          this.loading = false
+          this.users = response.data.users
+        }
+      } catch (err) {
+        console.log(err);
+        setTimeout(() => (this.errors = []), 5000);
+      }
+    },
+    async deleteUserConfirm() {
+      try {
+        const response = await UserService.delete(
+          this.user._id,
+          this.$store.state.token
+        );
+        if (response) {
+          this.loadUsers();
+          this.dialogDelete = false;
+        }
+      } catch (error) {
+        console.log(error);
+        setTimeout(() => (this.errors = []), 5000);
+      }
+    },
+    deleteUser(user) {
+      this.user = user;
+      this.dialogDelete = true;
+    },
     async loadProject() {
       try {
         const id = this.$route.params.id;
@@ -109,5 +221,5 @@ export default {
 };
 </script>
 
-<style>
+<style scoped> 
 </style>

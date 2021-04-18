@@ -7,14 +7,22 @@ export default {
     show() {
         return axios.get(`user/me`)
     },
-    allUserInfo() {
-        return axios.get(`users/admin`)
+    allUserInfo(token) {
+        return axios.get(`user/admin/all`, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
     },
     put(userId, data) {
         return axios.put(`users/${userId}`, data)
     },
-    delete(userId) {
-        return axios.delete(`users/${userId}`)
+    delete(userId, token) {
+        return axios.delete(`user/${userId}`, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
     }
     // changeAvatar(user, file) {
     //     return axios.put(`users/${user.id}`, file)
