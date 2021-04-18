@@ -9,7 +9,7 @@
       <router-link :to="{name: 'home'}" class="brand">Checklist</router-link>
     </v-toolbar-title> -->
     <v-toolbar-title>
-      <router-link :to="{name: 'home'}" class="brand-black">
+      <router-link :to="{name: 'projects'}" class="brand-black">
         <v-img max-width="150px" src="../../assets/checky.svg"></v-img>
       </router-link>
             <!-- <span class="d-block display-1 pa-2">

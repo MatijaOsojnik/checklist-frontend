@@ -14,8 +14,14 @@ import Invite from '@/views/projects/Invite'
 Vue.use(VueRouter)
 
 const routes = [{
+    path: '/',
+    redirect: {
+      name: 'projects'
+    },
+  },
+  {
     path: '/projects',
-    name: 'home',
+    name: 'projects',
     component: Home,
     meta: {
       onlyAuthUser: true
@@ -104,7 +110,7 @@ const routes = [{
   // },
   {
     path: '*',
-    component: Login
+    component: Home
   }
 ]
 
@@ -128,7 +134,7 @@ router.beforeEach((to, from, next) => {
   } else if (to.meta.onlyGuestUser) {
     if (isUserLoggedIn) {
       next({
-        name: 'home'
+        name: 'projects'
       })
     } else {
       next()

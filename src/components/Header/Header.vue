@@ -53,7 +53,7 @@
         </v-container>
       </v-card>
     </v-menu> -->
-    <v-spacer></v-spacer>
+    <!-- <v-spacer></v-spacer>
 
       <v-btn
         outlined
@@ -62,7 +62,7 @@
       >Sign in</v-btn>
       <v-btn v-if="$store.state.isUserLoggedIn" @click="logout">
         Logout
-      </v-btn>
+      </v-btn> -->
     
   </v-app-bar>
 </div>

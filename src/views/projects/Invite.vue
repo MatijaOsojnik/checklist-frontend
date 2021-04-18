@@ -9,7 +9,7 @@
         {{ message }}
       </p>
     </v-alert>
-    <v-btn :to="{ name: 'home' }" color="success">Nadaljuj</v-btn>
+    <v-btn :to="{ name: 'projects' }" color="success">Nadaljuj</v-btn>
   </div>
 </template>
 

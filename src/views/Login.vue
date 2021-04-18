@@ -22,7 +22,7 @@
           <v-scroll-x-transition>
             <v-alert type="warning" elevation="2" v-if="error">
               <span>{{ error }}</span>
-              <div v-if="error = 'Za prijavo v aplikacijo, vas prosimo, da potrdite svoj račun.'">
+              <div v-if="error == 'Za prijavo v aplikacijo, vas prosimo, da potrdite svoj račun.'">
                 <span >
                   Niste prejeli e-poštnega sporočila?
                 </span>
@@ -100,7 +100,7 @@ export default {
               if (response.data.token) {
                 this.$store.dispatch("setToken", response.data.token);
                 this.$store.dispatch("setUser", decoded);
-                this.$router.push({ name: "home" });
+                this.$router.push({ name: "projects" });
               }
             } else {
               this.error =
@@ -109,8 +109,7 @@ export default {
           }
         }
       } catch (error) {
-        console.log(error.response.data);
-        this.error = "E-poštni naslov in geslo se ne ujemata.";
+        this.error = error.response.data.message
         setTimeout(() => (this.error = null), 5000);
       }
     },

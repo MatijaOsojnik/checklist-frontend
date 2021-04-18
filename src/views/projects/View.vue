@@ -328,8 +328,7 @@ export default {
           this.list_name = "";
         }
       } catch (err) {
-        setTimeout(() => (this.waitBeforeClick = false), 3000);
-        setTimeout(() => (this.errors = []), 5000);
+        console.log(err)
       }
     },
     async createItem(listId) {
