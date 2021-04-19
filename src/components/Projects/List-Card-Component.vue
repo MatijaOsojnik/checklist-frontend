@@ -96,6 +96,7 @@
 
 <script>
 import ItemService from "@/services/ItemService";
+import ProjectService from "@/services/ProjectService";
 import draggable from "vuedraggable";
 export default {
   components: {
@@ -112,6 +113,29 @@ export default {
     list: Object,
   },
   methods: {
+        async loadProject() {
+      try {
+        const id = this.$route.params.id;
+        const response = await ProjectService.single(
+          id,
+          this.$store.state.token
+        );
+        if (response) {
+          this.project = response.data.item;
+          const projectItems = response.data.item.children.map(list => {
+            const allItems = {
+              list: list,
+              items: list.children
+            }
+            return allItems
+          })
+          this.list = projectItems[0]
+          this.inviteUrl = response.data.inviteLink;
+        }
+      } catch (err) {
+        setTimeout(() => (this.errors = []), 5000);
+      }
+    },
     async createItem(listId) {
       try {
         const id = listId;
@@ -122,9 +146,7 @@ export default {
         );
         console.log(response)
         if (response) {
-          this.list.items.push({
-              title: this.item_name
-              })
+          this.loadProject()
           this.newElement = false;
           this.item_name = "";
         }
@@ -141,7 +163,7 @@ export default {
           this.$store.state.token
         );
         if (response) {
-          this.loadLists();
+          this.loadProject();
         }
       } catch (err) {
         console.log(err);

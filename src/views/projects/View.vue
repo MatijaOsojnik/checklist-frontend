@@ -256,7 +256,6 @@ export default {
   }),
   mounted() {
     this.loadProject();
-    this.loadLists();
   },
   computed: {
     lastListCreated() {
@@ -289,26 +288,10 @@ export default {
               list: list,
               items: list.children
             }
-            console.log(list)
             return allItems
           })
           this.lists = projectItems
           this.inviteUrl = response.data.inviteLink;
-        }
-      } catch (err) {
-        setTimeout(() => (this.errors = []), 5000);
-      }
-    },
-    async loadLists() {
-      try {
-        const id = this.$route.params.id;
-        const response = await ItemService.allLists(
-          id,
-          this.$store.state.token
-        );
-
-        if (response) {
-          this.lists = response.data.items;
         }
       } catch (err) {
         setTimeout(() => (this.errors = []), 5000);
@@ -323,8 +306,7 @@ export default {
           this.$store.state.token
         );
         if (response) {
-          this.lists = response.data.items;
-          this.loadLists();
+          this.loadProject();
           this.list_name = "";
         }
       } catch (err) {
