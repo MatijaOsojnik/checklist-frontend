@@ -2,69 +2,125 @@
   <div>
     <v-layout>
       <v-flex xs12 justify="center" align="center">
-        <v-card class="mx-auto" v-if="project">
-          <v-toolbar flat color="#617BE3" dark>
-            <v-btn @click="$router.go(-1)" icon
-              ><v-icon>mdi-arrow-left</v-icon></v-btn
-            >
-            <v-toolbar-title> {{ project.title }}</v-toolbar-title>
-          </v-toolbar>
-          <v-row class="mx-2" v-if="lists">
-            <v-col>
-              <v-card class="mt-4 mx-auto py-2">
-                <v-card-text>
-                  <v-sheet color="rgba(0, 0, 0, .12)">
-                    <v-sparkline
-                      :value="value"
-                      color="rgba(255, 255, 255, .7)"
-                      height="100"
-                      padding="24"
-                      stroke-linecap="round"
-                      smooth
-                    >
-                      <template v-slot:label="item">
-                        ${{ item.value }}
-                      </template>
-                    </v-sparkline>
-                  </v-sheet>
-                </v-card-text>
-                <v-card-text class="pt-0">
-                  <div class="title font-weight-light mb-2">
-                    Število stolpcev
-                  </div>
-                  <div class="subheading font-weight-light grey--text">
-                    Današnji dan
-                  </div>
-                  <v-divider class="my-2"></v-divider>
-                  <v-icon class="mr-2" small> mdi-clock </v-icon>
-                  <span class="caption grey--text font-weight-light"
-                    >Zadnji ustvarjen
-                    <timeago
-                      :datetime="lastListCreated"
-                      :auto-update="60"
-                    ></timeago>
-                  </span>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row> </v-card></v-flex
-    ></v-layout>
+        <v-toolbar flat color="#617BE3" dark>
+          <v-toolbar-title>Moji projekti</v-toolbar-title>
+        </v-toolbar>
+        <v-row class="mx-2">
+          <v-col class="col-xl-6 col-lg-6 col-12">
+            <v-card class="mt-4 mx-auto py-2">
+              <v-card-text>
+                <v-sheet
+                  class="v-sheet--offset mx-auto"
+                  color="cyan"
+                  elevation="12"
+                  rounded
+                >
+                  <line-chart-component v-if="loaded" :chartData="chartData" />
+                </v-sheet>
+              </v-card-text>
+              <v-card-text class="pt-0">
+                <div class="title font-weight-light mb-2">
+                  Število projektov
+                </div>
+                <!-- <div class="subheading font-weight-light grey--text">
+                  Današnji dan
+                </div> -->
+                <v-divider class="my-2"></v-divider>
+                <v-icon class="mr-2" small> mdi-clock </v-icon>
+                <span
+                  class="caption grey--text font-weight-light"
+                  v-if="lastMyProjectCreated"
+                  >Zadnji ustvarjen
+                  <timeago
+                    :datetime="lastMyProjectCreated"
+                    :auto-update="60"
+                  ></timeago>
+                </span>
+                <span v-else>
+                  Niste še ustvarili projekta
+                </span>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col class="col-xl-6 col-lg-6 col-12"> </v-col>
+        </v-row>
+      </v-flex>
+    </v-layout>
   </div>
 </template>
 
 <script>
 import ProjectService from "@/services/ProjectService";
+import LineChartComponent from "@/components/Charts/Line-Chart-Component.vue";
 export default {
+  components: {
+    LineChartComponent,
+  },
   data: () => ({
-    project: null,
-    lists: null,
+    loaded: false,
+    chartData: {
+      type: "line",
+      data: {
+        labels: [
+          "Januar",
+          "Februar",
+          "Marec",
+          "April",
+          "Maj",
+          "Junij",
+          "Julij",
+          "Avgust",
+          "September",
+          "Oktober",
+          "November",
+          "December",
+        ],
+        datasets: [
+          {
+            label: "Novi projekti",
+            backgroundColor: "#f87979",
+            data: [11, 12, 0],
+          },
+        ],
+      },
+
+      options: {
+        responsive: true,
+        lineTension: 0,
+        borderWidth: 4,
+        borderCapStyle: "round",
+        borderJoinStyle: "bevel",
+        spanGaps: true,
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                padding: 25,
+              },
+            },
+          ],
+        },
+      },
+    },
+    myProjects: null,
+    invitedProjects: null,
     value: [423, 446, 675, 510, 590, 610, 760],
   }),
   mounted() {
-    this.loadProject();
+    this.loadProjects();
   },
   computed: {
-    lastListCreated() {
+    lastMyProjectCreated() {
+      if (this.myProjects) {
+        const length = this.myProjects.length;
+        const last = this.myProjects[length - 1].dateAdd;
+        return last;
+      } else {
+        return null;
+      }
+    },
+    lastInvitedProjectListCreated() {
       if (this.lists.length) {
         const length = this.lists.length;
         const last = this.lists[length - 1].list.dateAdd;
@@ -75,23 +131,24 @@ export default {
     },
   },
   methods: {
-    async loadProject() {
+    async loadProjects() {
       try {
-        const id = this.$route.params.id;
-        const response = await ProjectService.single(
-          id,
-          this.$store.state.token
-        );
-        console.log(response)
-        if (response) {
-          this.project = response.data.item;
-        
-          this.lists = response.data.item.children
-
-          console.log(response.data.item.children)
+        const response = await ProjectService.index(this.$store.state.token);
+        console.log(response.data);
+        if (response.data.items) {
+          this.myProjects = response.data.items;
+          this.loaded = true;
+        } else {
+          this.myProjects = [];
+        }
+        if (response.data.invited) {
+          this.invitedProjects = response.data.invited;
+          this.loaded = true;
+        } else {
+          this.invitedProjects = [];
         }
       } catch (err) {
-          console.log(err)
+        console.log(err);
         setTimeout(() => (this.errors = []), 5000);
       }
     },

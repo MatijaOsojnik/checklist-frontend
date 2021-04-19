@@ -2,75 +2,67 @@
   <div>
     <v-layout>
       <v-flex xs12 justify="center" align="center">
-        <v-card class="mx-auto">
-          <v-toolbar flat color="#617BE3" dark>
-            <!-- <v-btn @click="$router.go(-1)" icon
-              ><v-icon>mdi-arrow-left</v-icon>
-            </v-btn> -->
-            <v-toolbar-title>Administrator</v-toolbar-title>
-          </v-toolbar>
-          <v-row class="mx-2">
-            <v-col v-if="users">
-              <v-card class="pa-2">
-                <span class="pa-4 d-block title">
-                  <v-icon large> mdi-account-circle </v-icon>
-                  Uporabniki
-                </span>
-                <v-card-title>
-                  <v-text-field
-                    v-model="search"
-                    append-icon="mdi-magnify"
-                    label="Išči"
-                    single-line
-                    hide-details
-                  ></v-text-field>
-                </v-card-title>
-                <v-data-table
-                  :loading="loading"
-                  :headers="headers"
-                  :items="users"
-                  :search="search"
-                >
-                  <template v-slot:top>
-                    <v-dialog v-model="dialogDelete" max-width="500px">
-                      <v-card>
-                        <v-card-title class="headline"
-                          >Res želiš izbrisati tega uporabnika?</v-card-title
+        <v-row class="mx-2">
+          
+          <v-col v-if="users">
+            <v-card class="pa-2">
+              <span class="pa-4 d-block title">
+                <v-icon large> mdi-account-circle </v-icon>
+                Uporabniki
+              </span>
+              <v-card-title>
+                <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Išči"
+                  single-line
+                  hide-details
+                ></v-text-field>
+              </v-card-title>
+              <v-data-table
+                :loading="loading"
+                :headers="headers"
+                :items="users"
+                :search="search"
+              >
+                <template v-slot:top>
+                  <v-dialog v-model="dialogDelete" max-width="500px">
+                    <v-card>
+                      <v-card-title class="headline"
+                        >Res želiš izbrisati tega uporabnika?</v-card-title
+                      >
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="dialogDelete = false"
+                          >Zapri</v-btn
                         >
-                        <v-card-actions>
-                          <v-spacer></v-spacer>
-                          <v-btn
-                            color="blue darken-1"
-                            text
-                            @click="dialogDelete = false"
-                            >Zapri</v-btn
-                          >
-                          <v-btn
-                            color="blue darken-1"
-                            text
-                            @click="deleteUserConfirm"
-                            >OK</v-btn
-                          >
-                          <v-spacer></v-spacer>
-                        </v-card-actions>
-                      </v-card>
-                    </v-dialog>
-                  </template>
-                  <template v-slot:item.active="{ item }">
-                    <v-simple-checkbox
-                      v-model="item.active"
-                      disabled
-                    ></v-simple-checkbox>
-                  </template>
-                  <template v-slot:item.actions="{ item }">
-                    <v-icon small @click="deleteUser(item)">
-                      mdi-delete
-                    </v-icon>
-                  </template>
-                </v-data-table>
-              </v-card>
-            </v-col>
-            <!-- <v-col>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="deleteUserConfirm"
+                          >OK</v-btn
+                        >
+                        <v-spacer></v-spacer>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </template>
+                <template v-slot:item.active="{ item }">
+                  <v-simple-checkbox
+                    v-model="item.active"
+                    disabled
+                  ></v-simple-checkbox>
+                </template>
+                <template v-slot:item.actions="{ item }">
+                  <v-icon small @click="deleteUser(item)"> mdi-delete </v-icon>
+                </template>
+              </v-data-table>
+            </v-card>
+          </v-col>
+          <!-- <v-col>
               <v-card class="mt-4 mx-auto py-2">
                 <v-card-text>
                   <v-sheet color="rgba(0, 0, 0, .12)">
@@ -107,9 +99,8 @@
                 </v-card-text>
               </v-card>
             </v-col> -->
-          </v-row>
-        </v-card></v-flex
-      ></v-layout
+        </v-row>
+      </v-flex></v-layout
     >
   </div>
 </template>
@@ -162,8 +153,8 @@ export default {
       try {
         const response = await UserService.allUserInfo(this.$store.state.token);
         if (response) {
-          this.loading = false
-          this.users = response.data.users
+          this.loading = false;
+          this.users = response.data.users;
         }
       } catch (err) {
         console.log(err);
@@ -221,5 +212,5 @@ export default {
 };
 </script>
 
-<style scoped> 
+<style scoped>
 </style>

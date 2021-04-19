@@ -47,9 +47,6 @@ const routes = [{
     path: '/verify/:verificationCode',
     name: 'verify',
     component: Verify,
-    meta: {
-      onlyGuestUser: true
-    }
   },
   {
     path: '/projects/create',
@@ -84,30 +81,21 @@ const routes = [{
     }
   },
   {
-    path: '/admin',
-    name: 'admin-view',
-    component: AdminView,
-    meta: {
-      onlyAuthUser: true
-    }
-  },
-  {
     path: '/stats',
     name: 'user-view',
     component: UserView,
     meta: {
       onlyAuthUser: true
+    },
+  },
+  {
+    path: '/admin',
+    name: 'admin-view',
+    component: AdminView,
+    meta: {
+      onlyAdminUser: true
     }
   },
-
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import( /* webpackChunkName: "about" */ '../views/About.vue')
-  // },
   {
     path: '*',
     component: Home
@@ -122,6 +110,19 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const isUserLoggedIn = store.state.isUserLoggedIn
+  let adminUser = false
+
+  if(store.state.user) {
+    const userRoles = store.state.user.roles
+    adminUser = userRoles.filter(role => role.name === 'admin' ? true : false)
+    if(adminUser.length > 0) {
+      adminUser = true
+    } else {
+      adminUser = false
+    }
+    
+  } 
+
 
   if (to.meta.onlyAuthUser) {
     if (isUserLoggedIn) {
@@ -138,6 +139,17 @@ router.beforeEach((to, from, next) => {
       })
     } else {
       next()
+    }
+  } else if (to.meta.onlyAdminUser) {
+    if (isUserLoggedIn) {
+      if(adminUser) {
+        next()
+      } else {
+        console.log()
+        next({
+          name: 'projects'
+        })
+      }
     }
   }
 })

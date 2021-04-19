@@ -294,6 +294,7 @@ export default {
           this.inviteUrl = response.data.inviteLink;
         }
       } catch (err) {
+        this.$router.push({ name: "projects" });
         setTimeout(() => (this.errors = []), 5000);
       }
     },

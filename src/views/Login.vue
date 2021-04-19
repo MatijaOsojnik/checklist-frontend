@@ -100,7 +100,6 @@ export default {
               if (response.data.token) {
                 this.$store.dispatch("setToken", response.data.token);
                 this.$store.dispatch("setUser", decoded);
-                console.log(this.$store.state.user)
                 this.$router.push({ name: "projects" });
               }
             } else {

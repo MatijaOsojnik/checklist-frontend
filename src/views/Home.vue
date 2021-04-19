@@ -4,6 +4,17 @@
       <v-card-title>
         <p class="card-title">{{ moment().format("dddd") }}</p>
       </v-card-title>
+      <v-card-actions>
+        <v-btn color="primary" @click="loginGoogleDrive">
+          <v-icon>mdi-google</v-icon> Poveži Google Drive
+        </v-btn>
+        <v-btn color="primary" @click="downloadGoogleDrive">
+          <v-icon>mdi-progress-download</v-icon> Prenesi podatke
+        </v-btn>
+        <v-btn color="primary" @click="uploadGoogleDrive">
+          <v-icon>mdi-progress-upload</v-icon> Naloži podatke
+        </v-btn>
+      </v-card-actions>
     </v-card>
     <div v-if="$store.state.isUserLoggedIn">
       <!-- <div v-if="projects" class="my-2">
@@ -106,6 +117,7 @@
 // @ is an alias to /src
 import jwtDecode from "jwt-decode";
 import ProjectService from "@/services/ProjectService";
+import SyncService from "@/services/SyncService";
 
 export default {
   name: "Home",
@@ -127,7 +139,7 @@ export default {
         if (response.data.items.length) {
           this.projects = response.data.items;
         }
-        if(response.data.invited.length) {
+        if (response.data.invited.length) {
           this.invited = response.data.invited;
         }
       } catch (err) {
@@ -140,6 +152,18 @@ export default {
         this.user = jwtDecode(token);
         this.$store.dispatch("setUser", this.user);
       }
+    },
+    async loginGoogleDrive() {
+      const response = SyncService.oauth2(this.$store.state.token);
+      console.log(response);
+    },
+    async uploadGoogleDrive() {
+      const response = SyncService.syncWithDrive(this.$store.state.token);
+      console.log(response);
+    },
+    async downloadGoogleDrive() {
+      const response = SyncService.syncWithApp(this.$store.state.token);
+      console.log(response);
     },
     // async loadStatuses() {
     //   try {
