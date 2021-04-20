@@ -153,9 +153,12 @@ export default {
         this.$store.dispatch("setUser", this.user);
       }
     },
-    async loginGoogleDrive() {
-      const response = SyncService.oauth2(this.$store.state.token);
-      console.log(response);
+   loginGoogleDrive() {
+      try {
+        window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.file%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.readonly&response_type=code&client_id=322554466731-ttr38queb71p49bc1i4uqog1vhdk1sat.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fchecky-backend.herokuapp.com%2Fapi%2Fouath2callback';
+      } catch (error) {
+        console.log(error.response)
+      }
     },
     async uploadGoogleDrive() {
       const response = SyncService.syncWithDrive(this.$store.state.token);

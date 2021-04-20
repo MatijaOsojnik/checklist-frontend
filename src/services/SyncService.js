@@ -16,7 +16,7 @@ export default {
         })
     },
     oauth2(token) {
-        return axios.get('oauth2callback', {
+        return axios.post('drive/oauth2callback', {token: token}, {
             headers: {
                 Authorization: 'Bearer ' + token,
             }
