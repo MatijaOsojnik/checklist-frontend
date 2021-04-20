@@ -4,10 +4,17 @@
       <v-card-title>
         <p class="card-title">{{ moment().format("dddd") }}</p>
       </v-card-title>
+      <v-card-text>
+        <v-scroll-x-transition>
+          <v-alert type="success" v-if="message">
+            {{ message }}
+          </v-alert>
+          <v-alert type="warning" v-if="error">
+            {{ error }}
+          </v-alert>
+        </v-scroll-x-transition>
+      </v-card-text>
       <v-card-actions>
-                <v-btn color="primary" :to="{name: 'drive-code'}">
-          <v-icon>mdi-google</v-icon> Google stran
-        </v-btn>
         <v-btn color="primary" @click="loginGoogleDrive">
           <v-icon>mdi-google</v-icon> Poveži Google Drive
         </v-btn>
@@ -130,6 +137,8 @@ export default {
     projects: null,
     invited: null,
     hover: 2,
+    message: null,
+    error: null,
   }),
   mounted() {
     this.loadUser();
@@ -159,18 +168,37 @@ export default {
     async loginGoogleDrive() {
       try {
         const response = await SyncService.oauth2(this.$store.state.token);
-        window.location.href = response.data.url
+        if (response.data.url) {
+          window.location.href = response.data.url;
+        } else {
+          this.message = response.data.message;
+          setTimeout(() => {
+            this.message = null;
+          }, 6000);
+        }
       } catch (error) {
         console.log(error.response);
       }
     },
     async uploadGoogleDrive() {
-      const response = SyncService.syncWithDrive(this.$store.state.token);
-      console.log(response);
+      const response = await SyncService.syncWithDrive(this.$store.state.token);
+      if (response) {
+        this.message = response.data.message;
+        setTimeout(() => {
+          this.message = null;
+        }, 6000);
+        this.loadProjects();
+      }
     },
     async downloadGoogleDrive() {
-      const response = SyncService.syncWithApp(this.$store.state.token);
-      console.log(response);
+      const response = await SyncService.syncWithApp(this.$store.state.token);
+      if (response) {
+        this.message = response.data.message;
+        setTimeout(() => {
+          this.message = null;
+        }, 6000);
+        this.loadProjects();
+      }
     },
     // async loadStatuses() {
     //   try {
