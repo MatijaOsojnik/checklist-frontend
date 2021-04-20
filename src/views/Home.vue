@@ -4,15 +4,13 @@
       <v-card-title>
         <p class="card-title">{{ moment().format("dddd") }}</p>
       </v-card-title>
-      <v-card-text>
-        <v-scroll-x-transition>
+      <v-card-text v-if="message || error">
           <v-alert type="success" v-if="message">
             {{ message }}
           </v-alert>
           <v-alert type="warning" v-if="error">
             {{ error }}
           </v-alert>
-        </v-scroll-x-transition>
       </v-card-text>
       <v-card-actions>
         <v-btn color="primary" @click="loginGoogleDrive">

@@ -48,6 +48,9 @@ const routes = [{
     path: '/verify/:verificationCode',
     name: 'verify',
     component: Verify,
+        meta: {
+          onlyGuestUser: true
+        }
   },
   {
     path: '/projects/create',
