@@ -10,6 +10,7 @@ import ProjectView from '@/views/projects/View'
 import ProjectStats from '@/views/projects/Statistics'
 import AdminView from '@/views/admin/View'
 import UserView from '@/views/user/View'
+import Drive from '@/views/user/Drive'
 import Invite from '@/views/projects/Invite'
 Vue.use(VueRouter)
 
@@ -47,6 +48,9 @@ const routes = [{
     path: '/verify/:verificationCode',
     name: 'verify',
     component: Verify,
+        meta: {
+          onlyGuestUser: true
+        }
   },
   {
     path: '/projects/create',
@@ -97,6 +101,14 @@ const routes = [{
     }
   },
   {
+    path: '/drive/code',
+    name: 'drive-code',
+    component: Drive,
+    meta: {
+      onlyAuthUser: true
+    },
+  },
+  {
     path: '*',
     component: Home
   }
@@ -112,16 +124,16 @@ router.beforeEach((to, from, next) => {
   const isUserLoggedIn = store.state.isUserLoggedIn
   let adminUser = false
 
-  if(store.state.user) {
+  if (store.state.user) {
     const userRoles = store.state.user.roles
     adminUser = userRoles.filter(role => role.name === 'admin' ? true : false)
-    if(adminUser.length > 0) {
+    if (adminUser.length > 0) {
       adminUser = true
     } else {
       adminUser = false
     }
-    
-  } 
+
+  }
 
 
   if (to.meta.onlyAuthUser) {
@@ -142,7 +154,7 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.meta.onlyAdminUser) {
     if (isUserLoggedIn) {
-      if(adminUser) {
+      if (adminUser) {
         next()
       } else {
         console.log()

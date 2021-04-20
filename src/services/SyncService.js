@@ -16,10 +16,20 @@ export default {
         })
     },
     oauth2(token) {
-        return axios.get('oauth2callback', {
+        return axios.post('oauth2callback', {token: token}, {
             headers: {
                 Authorization: 'Bearer ' + token,
             }
         })
+    },
+    oauth2Code(token, code) {
+                return axios.post('oauth2callback', {
+                    code: code,
+                }, {
+                    headers: {
+                        Authorization: 'Bearer ' + token,
+                    }
+                })
     }
+
 }
