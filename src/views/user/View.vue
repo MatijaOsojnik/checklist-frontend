@@ -16,8 +16,9 @@
                   rounded
                 >
                   <line-chart-component
-                    :chartData="chartData"
-                    v-if="chartData"
+                    :chartData="projectsData"
+                    chartId="projects"
+                    v-if="projectsData"
                   />
                 </v-sheet>
               </v-card-text>
@@ -31,7 +32,7 @@
                 <v-divider class="my-2"></v-divider>
                 <v-icon class="mr-2" small> mdi-clock </v-icon>
                 <span
-                  class="caption grey--text font-weight-light"
+                  class="caption "
                   v-if="lastMyProjectCreated"
                   >Zadnji ustvarjen
                   <timeago
@@ -43,7 +44,41 @@
               </v-card-text>
             </v-card>
           </v-col>
-          <v-col class="col-xl-6 col-lg-6 col-12"> </v-col>
+          <v-col class="col-xl-6 col-lg-6 col-12">
+            <v-card class="mt-4 mx-auto py-2">
+              <v-card-text>
+                <v-sheet
+                  class="v-sheet--offset mx-auto"
+                  color="cyan"
+                  elevation="12"
+                  rounded
+                >
+                  <line-chart-component
+                    :chartData="projectsInvitedData"
+                    chartId="projectsInvited"
+                    v-if="projectsInvitedData"
+                  />
+                </v-sheet>
+              </v-card-text>
+              <v-card-text class="pt-0">
+                <div class="title font-weight-light mb-2">
+                  Število pridruženih projektov
+                </div>
+                <!-- <div class="subheading font-weight-light grey--text">
+                  Današnji dan
+                </div> -->
+                <v-divider class="my-2"></v-divider>
+                <v-icon class="mr-2" small> mdi-account-plus </v-icon>
+                <span
+                  class="caption"
+                  v-if="lastJoinedProject"
+                  >Zadnji pridružen projekt:
+                  {{lastJoinedProject.title}}
+                </span>
+                <span v-else> Niste se še pridružili nobenemu projektu </span>
+              </v-card-text>
+            </v-card>
+          </v-col>
         </v-row>
       </v-flex>
     </v-layout>
@@ -60,13 +95,14 @@ export default {
   },
   data: () => ({
     loaded: false,
-    chartData: null,
+    projectsData: null,
+    projectsInvitedData: null,
+    lastJoinedProject: null,
     myProjects: null,
-    invitedProjects: null,
-    value: [423, 446, 675, 510, 590, 610, 760],
   }),
   mounted() {
     this.projectStats();
+    this.invitedProjectStats();
     this.loadProjects();
   },
   computed: {
@@ -115,21 +151,37 @@ export default {
         setTimeout(() => (this.errors = []), 5000);
       }
     },
-  async projectStats() {
-    try {
-      const response = await StatsService.projects(this.$store.state.token);
-      if (response.data) {
-        console.log(response.data)
-        this.chartData = response.data.chartData;
-        this.loaded = true;
-      } else {
-        console.log("Napaka.");
+    async projectStats() {
+      try {
+        const response = await StatsService.projects(this.$store.state.token);
+        if (response.data) {
+          this.projectsData = response.data.chartData;
+          this.loaded = true;
+        } else {
+          console.log("Napaka.");
+        }
+      } catch (err) {
+        console.log(err);
+        setTimeout(() => (this.errors = []), 5000);
       }
-    } catch (err) {
-      console.log(err);
-      setTimeout(() => (this.errors = []), 5000);
-    }
-  },
+    },
+    async invitedProjectStats() {
+      try {
+        const response = await StatsService.projectsInvited(
+          this.$store.state.token
+        );
+        if (response.data) {
+          this.projectsInvitedData = response.data.chartData;
+          this.lastJoinedProject = response.data.lastProject;
+          this.loaded = true;
+        } else {
+          console.log("Napaka.");
+        }
+      } catch (err) {
+        console.log(err);
+        setTimeout(() => (this.errors = []), 5000);
+      }
+    },
   },
 };
 </script>

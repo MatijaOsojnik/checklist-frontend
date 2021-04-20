@@ -7,4 +7,11 @@ export default {
             }
         })
     },
+    projectsInvited(token) {
+        return axios.get('stats/projects/invited', {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
+    },
 }
