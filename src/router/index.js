@@ -10,6 +10,7 @@ import ProjectView from '@/views/projects/View'
 import ProjectStats from '@/views/projects/Statistics'
 import AdminView from '@/views/admin/View'
 import UserView from '@/views/user/View'
+import Drive from '@/views/user/Drive'
 import Invite from '@/views/projects/Invite'
 Vue.use(VueRouter)
 
@@ -95,6 +96,11 @@ const routes = [{
     meta: {
       onlyAdminUser: true
     }
+  },
+  {
+    path: '/drive/code',
+    name: 'drive-code',
+    component: Drive
   },
   {
     path: '*',
