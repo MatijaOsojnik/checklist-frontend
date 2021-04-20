@@ -5,6 +5,9 @@
         <p class="card-title">{{ moment().format("dddd") }}</p>
       </v-card-title>
       <v-card-actions>
+                <v-btn color="primary" :to="{name: 'drive-code'}">
+          <v-icon>mdi-google</v-icon> Google stran
+        </v-btn>
         <v-btn color="primary" @click="loginGoogleDrive">
           <v-icon>mdi-google</v-icon> Poveži Google Drive
         </v-btn>

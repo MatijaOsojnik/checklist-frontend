@@ -13,15 +13,19 @@ export default {
       code: null
   }),
   mounted() {
-    this.sendCode();
+    // this.sendCode();
   },
   methods: {
     async sendCode() {
       try {
         const code = this.$route.query.code;
         this.code = this.$route.query.code;
-        const response = await SyncService.oauth2Code(this.$store.state.token, code);
+        if(code) {
+            const response = await SyncService.oauth2Code(this.$store.state.token, code);
         console.log(response);
+        } else {
+            console.log('This is great')
+        }
       } catch (error) {
           console.log(error.response)
       }

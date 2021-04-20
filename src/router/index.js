@@ -100,7 +100,10 @@ const routes = [{
   {
     path: '/drive/code',
     name: 'drive-code',
-    component: Drive
+    component: Drive,
+    meta: {
+      onlyAuthUser: true
+    },
   },
   {
     path: '*',
@@ -118,16 +121,16 @@ router.beforeEach((to, from, next) => {
   const isUserLoggedIn = store.state.isUserLoggedIn
   let adminUser = false
 
-  if(store.state.user) {
+  if (store.state.user) {
     const userRoles = store.state.user.roles
     adminUser = userRoles.filter(role => role.name === 'admin' ? true : false)
-    if(adminUser.length > 0) {
+    if (adminUser.length > 0) {
       adminUser = true
     } else {
       adminUser = false
     }
-    
-  } 
+
+  }
 
 
   if (to.meta.onlyAuthUser) {
@@ -148,7 +151,7 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.meta.onlyAdminUser) {
     if (isUserLoggedIn) {
-      if(adminUser) {
+      if (adminUser) {
         next()
       } else {
         console.log()
