@@ -24,13 +24,21 @@ export default {
       try {
         const code = this.$route.query.code;
         this.code = code;
-        console.log(this.code);
         if (code) {
           const response = await SyncService.oauth2Code(
             this.$store.state.token,
             this.code
           );
-          console.log(response);
+          if(response) {
+            const newResponse = await SyncService.isConnected(
+              this.$store.state.token
+            );
+            if (newResponse.data.connected) {
+              this.$store.dispatch("setGoogleDrive", newResponse.data.connected);
+            } else {
+              console.log("Uporabnik še ni povezan");
+            }
+          }
         } else {
           console.log("This is great");
         }

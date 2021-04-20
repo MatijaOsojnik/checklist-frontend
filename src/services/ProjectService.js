@@ -7,6 +7,13 @@ export default {
             }
         })
     },
+    allProjectInfo(token) {
+        return axios.get('project/admin/all', {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
+    },
     single(id, token) {
         return axios.get(`project/${id}`, {
             headers: {

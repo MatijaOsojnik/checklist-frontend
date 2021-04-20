@@ -110,8 +110,14 @@ export default {
           this.registerSuccess = true;
         }
       } catch (error) {
-        console.log(error);
-        this.errors = error.response.data.errors;
+        console.log(error.response.data);
+        if(error.response.data.msg) {
+          const errors = []
+          errors.push(error.response.data)
+          this.errors = errors
+        } else {
+          this.errors = error.response.data.errors;
+        }
         setTimeout(() => (this.errors = null), 10000);
       }
     },

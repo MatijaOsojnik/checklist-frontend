@@ -8,12 +8,12 @@
       v-if="$store.state.token"
     >
       <div>
-        <v-list-item class="px-2" v-if="user">
+        <v-list-item class="px-2" v-if="$store.state.user">
           <v-list-item-avatar>
             <v-img src="./assets/luke-chesser-pJadQetzTkI-unsplash.jpg"></v-img>
           </v-list-item-avatar>
           <v-list-item-title
-            >{{ user.name }} {{ user.surname }}</v-list-item-title
+            >{{ $store.state.user.name }} {{ $store.state.user.surname }}</v-list-item-title
           >
         </v-list-item>
         <v-divider />
@@ -37,10 +37,7 @@
               <v-list-item-title>{{ items[1].title }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item
-            v-if="admin"
-            :to="{ name: items[2].link }"
-          >
+          <v-list-item v-if="admin" :to="{ name: items[2].link }">
             <v-list-item-icon>
               <v-icon>{{ items[2].icon }}</v-icon>
             </v-list-item-icon>
@@ -69,7 +66,6 @@
 import Footer from "@/components/Footer";
 import UserHeader from "@/components/Header/User-Header";
 import Header from "@/components/Header/Header";
-import jwtDecode from "jwt-decode";
 export default {
   name: "App",
 
@@ -90,24 +86,16 @@ export default {
     ],
     mini: true,
   }),
-  created() {
+  mounted() {
     this.loadUser();
   },
   methods: {
     async loadUser() {
-      if (this.$store.state.token) {
-        const token = this.$store.state.token;
-        const user = jwtDecode(token)
-        this.user = user
-        this.$store.dispatch("setUser", this.user);
-        console.log(this.user.roles)
-        
-        const isAdmin = this.user.roles.filter(role => role.name === 'admin' ? true : null)
+        const isAdmin = this.$store.state.user.roles.filter(role => role.name === 'admin' ? true : null)
         if(isAdmin.length) {
           this.admin = true
         }
       }
-    },
   },
 };
 </script>

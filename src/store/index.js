@@ -12,6 +12,7 @@ export default new Vuex.Store({
   state: {
     user: null,
     token: null,
+    googleDriveConnected: false,
     isUserLoggedIn: false
   },
   mutations: {
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     },
     setUser(state, user) {
       state.user = user
+    },
+    setGoogleDrive(state, connected) {
+      state.googleDriveConnected = connected
     },
   },
   actions: {
@@ -34,7 +38,9 @@ export default new Vuex.Store({
     }, token) {
       commit('setToken', token)
     },
+    setGoogleDrive({commit}, connected) {
+      commit('setGoogleDrive', connected)
+    },
   },
 
 })
-

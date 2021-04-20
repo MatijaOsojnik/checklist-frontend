@@ -5,15 +5,15 @@
         <p class="card-title">{{ moment().format("dddd") }}</p>
       </v-card-title>
       <v-card-text v-if="message || error">
-          <v-alert type="success" v-if="message">
-            {{ message }}
-          </v-alert>
-          <v-alert type="warning" v-if="error">
-            {{ error }}
-          </v-alert>
+        <v-alert type="success" v-if="message">
+          {{ message }}
+        </v-alert>
+        <v-alert type="warning" v-if="error">
+          {{ error }}
+        </v-alert>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" @click="loginGoogleDrive">
+        <v-btn color="primary" v-if="!isConnected" @click="loginGoogleDrive">
           <v-icon>mdi-google</v-icon> Poveži Google Drive
         </v-btn>
         <v-btn color="primary" @click="downloadGoogleDrive">
@@ -135,12 +135,14 @@ export default {
     projects: null,
     invited: null,
     hover: 2,
+    isConnected: false,
     message: null,
     error: null,
   }),
   mounted() {
     this.loadUser();
     this.loadProjects();
+    this.isConnectedToGoogleDrive();
   },
   methods: {
     async loadProjects() {
@@ -198,16 +200,14 @@ export default {
         this.loadProjects();
       }
     },
-    // async loadStatuses() {
-    //   try {
-    //     const response = await StatusService.index(this.$store.state.token);
-    //     if (response) {
-    //       this.$store.dispatch("setStatuses", response.data.statuses)
-    //     }
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // }
+    async isConnectedToGoogleDrive() {
+      const response = await SyncService.isConnected(this.$store.state.token);
+      if (response.data) {
+        console.log(response.data)
+        this.$store.dispatch("setGoogleDrive", response.data.connected);
+        this.isConnected = response.data.connected
+      }
+    },
   },
 };
 </script>
