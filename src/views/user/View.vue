@@ -15,7 +15,7 @@
                   elevation="12"
                   rounded
                 >
-                  <line-chart-component v-if="loaded" :chartData="chartData" />
+                  <line-chart-component :chartData="chartData" />
                 </v-sheet>
               </v-card-text>
               <v-card-text class="pt-0">
@@ -112,7 +112,7 @@ export default {
   },
   computed: {
     lastMyProjectCreated() {
-      if (this.myProjects) {
+      if (this.myProjects.length) {
         const length = this.myProjects.length;
         const last = this.myProjects[length - 1].dateAdd;
         return last;
@@ -152,20 +152,6 @@ export default {
         setTimeout(() => (this.errors = []), 5000);
       }
     },
-    // async loadLists() {
-    //   try {
-    //     const id = this.$route.params.id;
-    //     const response = await ItemService.allLists(
-    //       id,
-    //       this.$store.state.token
-    //     );
-    //     if (response) {
-    //       this.lists = response.data.items;
-    //     }
-    //   } catch (err) {
-    //     setTimeout(() => (this.errors = []), 5000);
-    //   }
-    // },
   },
 };
 </script>

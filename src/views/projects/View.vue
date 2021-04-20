@@ -110,87 +110,113 @@
               </template>
             </v-banner>
           </div>
-          <!-- <v-row class="mx-2" v-if="lists">
-            <v-col>
-              <v-card class="mt-4 mx-auto py-2">
-                <v-sheet
-                  class="v-sheet--offset mx-auto my-2"
-                  color="cyan"
-                  elevation="12"
-                  max-width="calc(100% - 32px)"
-                >
-                  <v-sparkline
-                    :value="lists.length"
-                    :labels="labels"
-                    color="rgba(255, 255, 255, .7)"
-                    height="100"
-                    padding="24"
-                    stroke-linecap="round"
-                    smooth
-                    auto-draw
-                  ></v-sparkline>
-                </v-sheet>
-
-                <v-card-text class="pt-0">
-                  <div class="title font-weight-light mb-2">
-                    Število stolpcev
-                  </div>
-                  <div class="subheading font-weight-light grey--text">
-                    Današnji dan
-                  </div>
-                  <v-divider class="my-2"></v-divider>
-                  <v-icon class="mr-2" small> mdi-clock </v-icon>
-                  <span class="caption grey--text font-weight-light"
-                    >Zadnji ustvarjen
-                    <timeago
-                      :datetime="lastListCreated"
-                      :auto-update="60"
-                    ></timeago>
-                  </span>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col>
-              <v-card class="mt-4 mx-auto py-2">
-                <v-sheet
-                  class="v-sheet--offset mx-auto my-2"
-                  color="cyan"
-                  elevation="12"
-                  max-width="calc(100% - 32px)"
-                >
-                  <v-sparkline
-                    :value="value"
-                    :labels="labels"
-                    color="rgba(255, 255, 255, .7)"
-                    height="100"
-                    padding="24"
-                    stroke-linecap="round"
-                    smooth
-                    auto-draw
-                  ></v-sparkline>
-                </v-sheet>
-
-                <v-card-text class="pt-0">
-                  <div class="title font-weight-light mb-2">
-                    User Registrations
-                  </div>
-                  <div class="subheading font-weight-light grey--text">
-                    Last Campaign Performance
-                  </div>
-                  <v-divider class="my-2"></v-divider>
-                  <v-icon class="mr-2" small> mdi-clock </v-icon>
-                  <span class="caption grey--text font-weight-light"
-                    >last registration 26 minutes ago</span
-                  >
-                </v-card-text>
-              </v-card>
-            </v-col> 
-          </v-row> -->
 
           <div class="list-container d-flex" v-if="lists">
-            <div v-for="list in lists" :key="list._id">
-              <ListCard :list="list" />
-            </div>
+            <v-card
+              min-width="400px"
+              class="my-4 mx-5"
+              v-for="list in lists"
+              :key="list._id"
+            >
+              <v-card-title>
+                {{ list.list.title }}
+                <v-spacer></v-spacer>
+
+                <v-menu
+                  bottom
+                  offset-y
+                  transition="scroll-y-transition"
+                  :close-on-content-click="false"
+                  open-on-hover
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-btn color="black" v-on="on" icon>
+                      <v-icon>mdi-dots-vertical</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-card max-width="200px">
+                    <v-container fluid>
+                      <div
+                        class="d-flex justify-center align-center flex-column ma-3"
+                      >
+                        <v-btn class="py-2" depressed text block> Uredi </v-btn>
+                        <v-btn
+                          depressed
+                          text
+                          block
+                          @click="deleteList(list.list._id)"
+                        >
+                          Izbriši
+                        </v-btn>
+                      </div>
+                    </v-container>
+                  </v-card>
+                </v-menu>
+              </v-card-title>
+              <v-divider></v-divider>
+              <v-card-text>
+                <v-list flat>
+                  <v-list-item v-if="list.items.length > 0">
+                    <v-progress-linear :value="0" color="success" height="25">
+                      <template v-slot:default="{ value }">
+                        <strong>{{ Math.round(value) }}%</strong>
+                      </template></v-progress-linear
+                    >
+                  </v-list-item>
+
+                  <!-- ITEM CARD -->
+
+                  <draggable
+                    :list="list.items"
+                    group="tasks"
+                    @change="end($event, list.list)"
+                  >
+                    <v-list-item v-for="item in list.items" :key="item._id">
+                      <v-checkbox
+                        color="success"
+                        :label="item.title"
+                        :value="item._id"
+                      ></v-checkbox>
+                    </v-list-item>
+                  </draggable>
+                  <v-list-item>
+                    <v-btn
+                      block
+                      color="primary"
+                      v-if="newElement[0] != list.list._id"
+                      @click="openNewElementField(list.list._id)"
+                    >
+                      <v-icon>mdi-plus</v-icon> Ustvari element
+                    </v-btn>
+                    <div
+                      style="width: 100%"
+                      v-if="newElement[0] == list.list._id"
+                    >
+                      <v-textarea
+                        solo
+                        rows="1"
+                        auto-grow
+                        placeholder="Vnesi ime novega elementa"
+                        v-model="item_name"
+                      >
+                      </v-textarea>
+
+                      <v-btn
+                        class="mr-2"
+                        color="success"
+                        @click="createItem(list.list._id)"
+                      >
+                        Ustvari
+                      </v-btn>
+                      <v-btn icon color="danger" @click="newElement = false">
+                        <v-icon>mdi-close-circle</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+            </v-card>
+
             <v-card min-width="400px" height="100%" class="my-4 mx-5">
               <v-card-text>
                 <v-btn block v-if="!newList" @click="newList = true"
@@ -228,15 +254,17 @@
 
 <script>
 //Components
-import ListCard from "@/components/Projects/List-Card-Component";
+// import ListCard from "@/components/Projects/List-Card-Component";
 //Services
 import ProjectService from "@/services/ProjectService";
 import ItemService from "@/services/ItemService";
+import draggable from "vuedraggable";
 //Libraries
 
 export default {
   components: {
-    ListCard,
+    // ListCard,
+    draggable
   },
   data: () => ({
     project: null,
@@ -267,11 +295,6 @@ export default {
         return null;
       }
     },
-    //     checkMove: function(evt){
-    //       console.log(evt.draggedContect.element._id)
-    //     return (evt.draggedContext.element.name!=='apple');
-
-    // }
   },
   methods: {
     async loadProject() {
@@ -283,14 +306,14 @@ export default {
         );
         if (response) {
           this.project = response.data.item;
-          const projectItems = response.data.item.children.map(list => {
+          const projectItems = response.data.item.children.map((list) => {
             const allItems = {
               list: list,
-              items: list.children
-            }
-            return allItems
-          })
-          this.lists = projectItems
+              items: list.children,
+            };
+            return allItems;
+          });
+          this.lists = projectItems;
           this.inviteUrl = response.data.inviteLink;
         }
       } catch (err) {
@@ -311,7 +334,7 @@ export default {
           this.list_name = "";
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     },
     async createItem(listId) {
@@ -322,10 +345,10 @@ export default {
           id,
           this.$store.state.token
         );
+        console.log(response);
         if (response) {
-          this.lists = response.data.items;
+          this.loadProject();
           this.newElement = false;
-          this.loadLists();
           this.item_name = "";
         }
       } catch (err) {
@@ -341,7 +364,7 @@ export default {
           this.$store.state.token
         );
         if (response) {
-          this.loadLists();
+          this.loadProject();
         }
       } catch (err) {
         console.log(err);

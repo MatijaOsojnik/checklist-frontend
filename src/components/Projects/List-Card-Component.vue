@@ -32,11 +32,7 @@
     <v-card-text>
       <v-list flat>
         <v-list-item v-if="list.items.length > 0">
-          <v-progress-linear
-            :value="0"
-            color="success"
-            height="25"
-          >
+          <v-progress-linear :value="0" color="success" height="25">
             <template v-slot:default="{ value }">
               <strong>{{ Math.round(value) }}%</strong>
             </template></v-progress-linear
@@ -106,36 +102,11 @@ export default {
     newElement: [],
     item_name: "",
   }),
-  mounted() {
-
-  },
+  computed: {},
   props: {
     list: Object,
   },
   methods: {
-        async loadProject() {
-      try {
-        const id = this.$route.params.id;
-        const response = await ProjectService.single(
-          id,
-          this.$store.state.token
-        );
-        if (response) {
-          this.project = response.data.item;
-          const projectItems = response.data.item.children.map(list => {
-            const allItems = {
-              list: list,
-              items: list.children
-            }
-            return allItems
-          })
-          this.list = projectItems[0]
-          this.inviteUrl = response.data.inviteLink;
-        }
-      } catch (err) {
-        setTimeout(() => (this.errors = []), 5000);
-      }
-    },
     async createItem(listId) {
       try {
         const id = listId;
@@ -144,9 +115,9 @@ export default {
           id,
           this.$store.state.token
         );
-        console.log(response)
+        console.log(response);
         if (response) {
-          this.loadProject()
+          this.loadProject();
           this.newElement = false;
           this.item_name = "";
         }
@@ -169,14 +140,6 @@ export default {
         console.log(err);
       }
     },
-    // async checkItem() {
-    //   id = this.list.list._id
-    //   const response = await ItemService.checkItem(
-    //     id,
-    //     this.$store.state.token
-    //   );
- 
-    // },
     openNewElementField(listId) {
       this.newElement = [];
       this.newElement.push(listId);
