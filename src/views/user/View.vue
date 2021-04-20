@@ -3,7 +3,7 @@
     <v-layout>
       <v-flex xs12 justify="center" align="center">
         <v-toolbar flat color="#617BE3" dark>
-          <v-toolbar-title>Moji projekti</v-toolbar-title>
+          <v-toolbar-title>Statistika</v-toolbar-title>
         </v-toolbar>
         <v-row class="mx-2">
           <v-col class="col-xl-6 col-lg-6 col-12">
@@ -15,7 +15,10 @@
                   elevation="12"
                   rounded
                 >
-                  <line-chart-component :chartData="chartData" />
+                  <line-chart-component
+                    :chartData="chartData"
+                    v-if="chartData"
+                  />
                 </v-sheet>
               </v-card-text>
               <v-card-text class="pt-0">
@@ -36,9 +39,7 @@
                     :auto-update="60"
                   ></timeago>
                 </span>
-                <span v-else>
-                  Niste še ustvarili projekta
-                </span>
+                <span v-else> Niste še ustvarili projekta </span>
               </v-card-text>
             </v-card>
           </v-col>
@@ -51,6 +52,7 @@
 
 <script>
 import ProjectService from "@/services/ProjectService";
+import StatsService from "@/services/StatsService";
 import LineChartComponent from "@/components/Charts/Line-Chart-Component.vue";
 export default {
   components: {
@@ -58,64 +60,25 @@ export default {
   },
   data: () => ({
     loaded: false,
-    chartData: {
-      type: "line",
-      data: {
-        labels: [
-          "Januar",
-          "Februar",
-          "Marec",
-          "April",
-          "Maj",
-          "Junij",
-          "Julij",
-          "Avgust",
-          "September",
-          "Oktober",
-          "November",
-          "December",
-        ],
-        datasets: [
-          {
-            label: "Novi projekti",
-            backgroundColor: "#f87979",
-            data: [11, 12, 0],
-          },
-        ],
-      },
-
-      options: {
-        responsive: true,
-        lineTension: 0,
-        borderWidth: 4,
-        borderCapStyle: "round",
-        borderJoinStyle: "bevel",
-        spanGaps: true,
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-                padding: 25,
-              },
-            },
-          ],
-        },
-      },
-    },
+    chartData: null,
     myProjects: null,
     invitedProjects: null,
     value: [423, 446, 675, 510, 590, 610, 760],
   }),
   mounted() {
+    this.projectStats();
     this.loadProjects();
   },
   computed: {
     lastMyProjectCreated() {
-      if (this.myProjects.length) {
-        const length = this.myProjects.length;
-        const last = this.myProjects[length - 1].dateAdd;
-        return last;
+      if (this.myProjects) {
+        if (this.myProjects.length) {
+          const length = this.myProjects.length;
+          const last = this.myProjects[length - 1].dateAdd;
+          return last;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
@@ -152,6 +115,21 @@ export default {
         setTimeout(() => (this.errors = []), 5000);
       }
     },
+  async projectStats() {
+    try {
+      const response = await StatsService.projects(this.$store.state.token);
+      if (response.data) {
+        console.log(response.data)
+        this.chartData = response.data.chartData;
+        this.loaded = true;
+      } else {
+        console.log("Napaka.");
+      }
+    } catch (err) {
+      console.log(err);
+      setTimeout(() => (this.errors = []), 5000);
+    }
+  },
   },
 };
 </script>

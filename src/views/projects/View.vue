@@ -382,7 +382,7 @@ export default {
           this.$store.state.token
         );
         if (response) {
-          this.$router.push({ name: "home" });
+          this.$router.push({ name: "projects" });
         }
       } catch (err) {
         console.log(err);
