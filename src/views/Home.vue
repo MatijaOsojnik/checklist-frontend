@@ -2,9 +2,10 @@
   <v-container fluid class="home">
     <v-card elevation="2">
       <v-card-title>
-        <p class="card-title">{{ moment().format("dddd") }}</p>
+        <span class="card-title d-block">{{ moment().format("dddd") }}</span>
       </v-card-title>
-      <v-card-text v-if="message || error">
+      <v-card-text v-if="message || error || quote">
+        <blockquote v-if="quote">{{quote.content}} - <span class="quote">{{quote.author}}</span></blockquote>
         <v-alert type="success" v-if="message">
           {{ message }}
         </v-alert>
@@ -128,6 +129,7 @@
 import jwtDecode from "jwt-decode";
 import ProjectService from "@/services/ProjectService";
 import SyncService from "@/services/SyncService";
+import axios from "axios"
 
 export default {
   name: "Home",
@@ -136,7 +138,7 @@ export default {
     user: null,
     projects: null,
     invited: null,
-    hover: 2,
+    quote: null,
     isConnected: false,
     message: null,
     error: null,
@@ -145,6 +147,7 @@ export default {
     this.loadUser();
     this.loadProjects();
     this.isConnectedToGoogleDrive();
+    this.getRandomQuote()
   },
   methods: {
     async loadProjects() {
@@ -205,11 +208,15 @@ export default {
     async isConnectedToGoogleDrive() {
       const response = await SyncService.isConnected(this.$store.state.token);
       if (response.data) {
-        console.log(response.data)
         this.$store.dispatch("setGoogleDrive", response.data.connected);
         this.isConnected = response.data.connected
       }
     },
+    async getRandomQuote() {
+      const response = await axios
+      .get('https://api.quotable.io/random')
+      this.quote = response.data
+    }
   },
 };
 </script>
