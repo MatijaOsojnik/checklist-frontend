@@ -52,8 +52,8 @@ export default {
             }
         })
     },
-    updateListItems(itemId, newListId, token) {
-        return axios.put(`item/${itemId}`, {newListId: newListId}, {
+    updateListItems(itemId, newList, token) {
+        return axios.put(`item/${itemId}`, {newList: newList}, {
             headers: {
                 Authorization: 'Bearer ' + token
             }

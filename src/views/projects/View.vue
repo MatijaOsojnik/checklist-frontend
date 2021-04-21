@@ -119,7 +119,8 @@
               :key="list._id"
             >
               <v-card-title>
-                {{ list.list.title }}
+                {{ list.title }}
+                <!-- {{ list._id }} -->
                 <v-spacer></v-spacer>
 
                 <v-menu
@@ -144,7 +145,7 @@
                           depressed
                           text
                           block
-                          @click="deleteList(list.list._id)"
+                          @click="deleteList(list._id)"
                         >
                           Izbriši
                         </v-btn>
@@ -156,7 +157,7 @@
               <v-divider></v-divider>
               <v-card-text>
                 <v-list flat>
-                  <v-list-item v-if="list.items.length > 0">
+                  <v-list-item v-if="list.children.length > 0">
                     <v-progress-linear :value="0" color="success" height="25">
                       <template v-slot:default="{ value }">
                         <strong>{{ Math.round(value) }}%</strong>
@@ -165,33 +166,34 @@
                   </v-list-item>
 
                   <!-- ITEM CARD -->
-
                   <draggable
-                    :list="list.items"
+                    :list="list.children"
                     group="tasks"
-                    @change="end($event, list.list)"
+                    :move="(evt) => onMove(evt, list)"
+                    @change="end($event, list)"
+                    :animation="200"
                   >
-                    <v-list-item v-for="item in list.items" :key="item._id">
-                      <v-checkbox
-                        color="success"
-                        :label="item.title"
-                        :value="item._id"
-                      ></v-checkbox>
-                    </v-list-item>
+                      <v-list-item
+                        v-for="item in list.children"
+                        :key="item._id"
+                      >
+                        <v-checkbox
+                          color="success"
+                          :label="item.title"
+                          :value="item._id"
+                        ></v-checkbox>
+                      </v-list-item>
                   </draggable>
                   <v-list-item>
                     <v-btn
                       block
                       color="primary"
-                      v-if="newElement[0] != list.list._id"
-                      @click="openNewElementField(list.list._id)"
+                      v-if="newElement[0] != list._id"
+                      @click="openNewElementField(list._id)"
                     >
                       <v-icon>mdi-plus</v-icon> Ustvari element
                     </v-btn>
-                    <div
-                      style="width: 100%"
-                      v-if="newElement[0] == list.list._id"
-                    >
+                    <div style="width: 100%" v-if="newElement[0] == list._id">
                       <v-textarea
                         solo
                         rows="1"
@@ -204,7 +206,7 @@
                       <v-btn
                         class="mr-2"
                         color="success"
-                        @click="createItem(list.list._id)"
+                        @click="createItem(list._id)"
                       >
                         Ustvari
                       </v-btn>
@@ -264,7 +266,7 @@ import draggable from "vuedraggable";
 export default {
   components: {
     // ListCard,
-    draggable
+    draggable,
   },
   data: () => ({
     project: null,
@@ -279,21 +281,22 @@ export default {
     lists: null,
     list_name: "",
     item_name: "",
+    oldListId: "",
     dialog: false,
+    drag: false,
     emailSelect: [],
   }),
   mounted() {
     this.loadProject();
   },
   computed: {
-    lastListCreated() {
-      if (this.lists) {
-        const length = this.lists.length;
-        const last = this.lists[length - 1].list.dateAdd;
-        return last;
-      } else {
-        return null;
-      }
+    dragOptions() {
+      return {
+        animation: 200,
+        group: "tasks",
+        disabled: false,
+        ghostClass: "ghost",
+      };
     },
   },
   methods: {
@@ -306,14 +309,7 @@ export default {
         );
         if (response) {
           this.project = response.data.item;
-          const projectItems = response.data.item.children.map((list) => {
-            const allItems = {
-              list: list,
-              items: list.children,
-            };
-            return allItems;
-          });
-          this.lists = projectItems;
+          this.lists = response.data.item.children;
           this.inviteUrl = response.data.inviteLink;
         }
       } catch (err) {
@@ -332,6 +328,7 @@ export default {
         if (response) {
           this.loadProject();
           this.list_name = "";
+          this.newList = false;
         }
       } catch (err) {
         console.log(err);
@@ -345,7 +342,6 @@ export default {
           id,
           this.$store.state.token
         );
-        console.log(response);
         if (response) {
           this.loadProject();
           this.newElement = false;
@@ -417,6 +413,38 @@ export default {
         console.log(error.response.data);
       }
     },
+    async moveItems(list, itemId) {
+      const newList = list;
+
+      if (newList._id !== this.oldListId) {
+        const list = newList;
+        const item = itemId;
+        // const listId = evt.draggedContext.element.parentItem
+        try {
+          const response = await ItemService.updateListItems(
+            item,
+            list,
+            this.$store.state.token
+          );
+          if (response) {
+            this.loadProject();
+          }
+        } catch (error) {
+          console.log(error.response)
+        }
+      }
+    },
+    onMove(evt, list) {
+      this.oldListId = list._id;
+    },
+    end(evt, list) {
+      //  console.log(itemId)
+      //  console.log("ListId: " + listId);
+      if (evt.added) {
+        this.moveItems(list, evt.added.element._id);
+      }
+    },
+    onAdd (e) { e.item.classList.add('display-none') },
     validateEmail(email) {
       const re = /^[^\s@]+@[^\s@]+$/;
       return re.test(email);
@@ -425,12 +453,10 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .list-container {
   overflow-x: scroll;
   min-height: 1000px;
 }
-.kanban-column {
-  min-height: 300px;
-}
-</style>
+</style>>
+
