@@ -90,7 +90,7 @@
             </v-menu>
           </v-toolbar>
 
-          <div>
+          <!-- <div>
             <v-checkbox
               v-model="inviteLink"
               class="mx-4"
@@ -109,7 +109,7 @@
                 <v-btn text color="primary" @click="dismiss"> Skrij </v-btn>
               </template>
             </v-banner>
-          </div>
+          </div> -->
 
           <div class="list-container d-flex" v-if="lists">
             <v-card

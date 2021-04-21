@@ -16,12 +16,14 @@
         <v-btn color="primary" v-if="!isConnected" @click="loginGoogleDrive">
           <v-icon>mdi-google</v-icon> Poveži Google Drive
         </v-btn>
-        <v-btn color="primary" @click="downloadGoogleDrive">
+        <div v-if="isConnected">
+        <v-btn color="primary" class="mx-2"  @click="downloadGoogleDrive">
           <v-icon>mdi-progress-download</v-icon> Prenesi podatke
         </v-btn>
-        <v-btn color="primary" @click="uploadGoogleDrive">
+        <v-btn color="primary"  @click="uploadGoogleDrive">
           <v-icon>mdi-progress-upload</v-icon> Naloži podatke
         </v-btn>
+        </div>
       </v-card-actions>
     </v-card>
     <div v-if="$store.state.isUserLoggedIn">
@@ -213,9 +215,6 @@ export default {
 </script>
 
 <style scoped>
-.home {
-  height: 50vh;
-}
 .card-title {
   font-size: 23px;
   font-weight: 600;
