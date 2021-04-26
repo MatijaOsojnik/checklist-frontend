@@ -14,7 +14,7 @@
         </v-alert>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" v-if="!isConnected" @click="loginGoogleDrive">
+        <v-btn color="primary" class="mx-2" v-if="!isConnected" @click="loginGoogleDrive">
           <v-icon>mdi-google</v-icon> Poveži Google Drive
         </v-btn>
         <div v-if="isConnected">

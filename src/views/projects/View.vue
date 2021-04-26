@@ -2,6 +2,13 @@
   <div>
     <v-layout>
       <v-flex xs12 justify="center" align="center">
+        <v-dialog v-if="updateListDialog" width="500px">
+          <v-card>
+            <div>
+              {{ currentList._id }}
+            </div>
+          </v-card>
+        </v-dialog>
         <v-card class="mx-auto" v-if="project">
           <v-toolbar flat color="#617BE3" dark>
             <v-toolbar-title>{{ project.title }}</v-toolbar-title>
@@ -128,7 +135,6 @@
                   offset-y
                   transition="scroll-y-transition"
                   :close-on-content-click="false"
-                  open-on-hover
                 >
                   <template v-slot:activator="{ on }">
                     <v-btn color="black" v-on="on" icon>
@@ -140,7 +146,26 @@
                       <div
                         class="d-flex justify-center align-center flex-column ma-3"
                       >
-                        <v-btn class="py-2" depressed text block> Uredi </v-btn>
+                        <v-dialog v-model="dialogUpdate" max-width="600px">
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              class="py-2"
+                              depressed
+                              text
+                              block
+                              v-on="on"
+                              v-bind="attrs"
+                            >
+                              Uredi
+                            </v-btn>
+                          </template>
+                          <v-card >
+                            <span>
+                              {{list.title}}
+                            </span>
+                          </v-card>
+                        </v-dialog>
+
                         <v-btn
                           depressed
                           text
@@ -173,16 +198,13 @@
                     @change="end($event, list)"
                     :animation="200"
                   >
-                      <v-list-item
-                        v-for="item in list.children"
-                        :key="item._id"
-                      >
-                        <v-checkbox
-                          color="success"
-                          :label="item.title"
-                          :value="item._id"
-                        ></v-checkbox>
-                      </v-list-item>
+                    <v-list-item v-for="item in list.children" :key="item._id">
+                      <v-checkbox
+                        color="success"
+                        :label="item.title"
+                        :value="item._id"
+                      ></v-checkbox>
+                    </v-list-item>
                   </draggable>
                   <v-list-item>
                     <v-btn
@@ -282,9 +304,11 @@ export default {
     list_name: "",
     item_name: "",
     oldListId: "",
-    dialog: false,
+    dialogUpdate: false,
+    updateListDialog: false,
     drag: false,
     emailSelect: [],
+    currentList: null,
   }),
   mounted() {
     this.loadProject();
@@ -316,6 +340,20 @@ export default {
         this.$router.push({ name: "projects" });
         setTimeout(() => (this.errors = []), 5000);
       }
+    },
+    async updateList() {
+      this.updateListDialog = true;
+      const response = await ItemService.put(
+        this.currentList,
+        this.$store.state.token
+      );
+      if (response) {
+        console.log(response.data);
+      }
+    },
+    updateListDialogMethod(list) {
+      this.updateListDialog = true;
+      this.currentList = list;
     },
     async createList() {
       try {
@@ -430,7 +468,7 @@ export default {
             this.loadProject();
           }
         } catch (error) {
-          console.log(error.response)
+          console.log(error.response);
         }
       }
     },
@@ -444,7 +482,9 @@ export default {
         this.moveItems(list, evt.added.element._id);
       }
     },
-    onAdd (e) { e.item.classList.add('display-none') },
+    onAdd(e) {
+      e.item.classList.add("display-none");
+    },
     validateEmail(email) {
       const re = /^[^\s@]+@[^\s@]+$/;
       return re.test(email);
