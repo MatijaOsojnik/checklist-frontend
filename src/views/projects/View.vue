@@ -2,18 +2,34 @@
   <div>
     <v-layout>
       <v-flex xs12 justify="center" align="center">
-        <v-dialog v-if="updateListDialog" width="500px">
-          <v-card>
-            <div>
-              {{ currentList._id }}
-            </div>
-          </v-card>
-        </v-dialog>
         <v-card class="mx-auto" v-if="project">
           <v-toolbar flat color="#617BE3" dark>
             <v-toolbar-title>{{ project.title }}</v-toolbar-title>
+            <span class="d-block title mx-2" style="font-size: 20px;">|</span>
+
+            <div v-for="user in users" :key="user._id">
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-avatar size="32" class="mr-2" v-bind="attrs" v-on="on">
+                    <!-- <v-icon> mdi-account-circle-outline </v-icon> -->
+                    <v-img src="../../assets/eberhard-grossgasteiger-xC7Ho08RYF4-unsplash.jpg"></v-img>
+                  </v-avatar>
+                </template>
+    
+                    {{user.name}} {{user.surname}}
+                    <span class="d-block heading">
+                      {{ user.email }}
+                    </span>
+
+              </v-tooltip>
+              <!-- <span class="d-block mx-2">{{user.name}} {{user.surname}}</span> -->
+            </div>
+
             <v-spacer></v-spacer>
-            <v-btn color="dark" :to="{ path: `/projects/${project._id}/stats` }"
+            <v-btn
+              color="dark"
+              class="mx-2"
+              :to="{ path: `/projects/${project._id}/stats` }"
               >Statistika</v-btn
             >
             <v-menu bottom offset-y transition="scroll-y-transition">
@@ -159,10 +175,10 @@
                               Uredi
                             </v-btn>
                           </template>
-                          <v-card >
-                            <span>
-                              {{list.title}}
-                            </span>
+                          <v-card>
+                            <v-card-title>
+                              {{ list.title }}
+                            </v-card-title>
                           </v-card>
                         </v-dialog>
 
@@ -301,9 +317,11 @@ export default {
     inviteLink: false,
     inviteUrl: null,
     lists: null,
+    users: [],
     list_name: "",
     item_name: "",
     oldListId: "",
+    dialog: false,
     dialogUpdate: false,
     updateListDialog: false,
     drag: false,
@@ -334,6 +352,12 @@ export default {
         if (response) {
           this.project = response.data.item;
           this.lists = response.data.item.children;
+          if(!this.users.length) {
+            this.users.push(response.data.item.owner);
+            response.data.item.users.forEach((user) => {
+              this.users.push(user);
+            });
+          }
           this.inviteUrl = response.data.inviteLink;
         }
       } catch (err) {
